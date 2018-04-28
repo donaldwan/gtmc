@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.common.SysCalendarMapper">
+  
+ <sql id="base_column">
+ 	CALENDAR_TYPE,PRODUCE_LINE,WORKDATE_TYPE,WORKDATE,
+ 	DAY_VALUE,WEEK_VALUE,MONTH_VALUE,YEAR_VALUE,MORNING_SHIFT,NIGHT_SHIFT,
+ 	CREATED_TIME,CREATED_USER_ID,CREATED_USER_NAME,
+ 	UPDATED_TIME,UPDATED_USER_ID,UPDATED_USER_NAME
+ </sql>
+  
+ <!-- findById -->
+ <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.common.SysCalendar">
+       SELECT ID,
+       <include refid="base_column"/>
+       FROM U_CALENDAR where ID = #{id}
+  </select>
+  
+  <!-- findAll -->
+  <select id="findAll" resultType="cn.com.gtmc.glaf2.entity.common.SysCalendar">
+      SELECT ID,
+      <include refid="base_column"/>
+      FROM U_CALENDAR
+  </select>
+  
+  <!-- insert mysql-->
+  <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.SysCalendar" 
+  	keyColumn="id"  keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+    insert into U_CALENDAR (<include refid="base_column"></include> )
+    values (
+      #{calendarType,jdbcType=INTEGER}, 
+      #{produceLine,jdbcType=VARCHAR}, 
+      #{workdateType,jdbcType=INTEGER}, 
+      #{workdate,jdbcType=TIMESTAMP}, 
+      #{dayValue,jdbcType=INTEGER}, 
+      #{weekValue,jdbcType=INTEGER}, 
+      #{monthValue,jdbcType=INTEGER}, 
+      #{yearValue,jdbcType=INTEGER}, 
+      #{morningShift,jdbcType=VARCHAR}, 
+      #{nightShift,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=INTEGER}, 
+      #{createdUserName,jdbcType=VARCHAR}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{updatedUserId,jdbcType=INTEGER}, 
+      #{updatedUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <!-- insert oracle -->
+  <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.SysCalendar" databaseId="oracle">
+    insert into U_CALENDAR (ID,<include refid="base_column"></include> )
+    values (#{id,jdbcType=INTEGER}, 
+      #{calendarType,jdbcType=INTEGER}, 
+      #{produceLine,jdbcType=VARCHAR}, 
+      #{workdateType,jdbcType=INTEGER}, 
+      #{workdate,jdbcType=TIMESTAMP}, 
+      #{dayValue,jdbcType=INTEGER}, 
+      #{weekValue,jdbcType=INTEGER}, 
+      #{monthValue,jdbcType=INTEGER}, 
+      #{yearValue,jdbcType=INTEGER}, 
+      #{morningShift,jdbcType=VARCHAR}, 
+      #{nightShift,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=INTEGER}, 
+      #{createdUserName,jdbcType=VARCHAR}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{updatedUserId,jdbcType=INTEGER}, 
+      #{updatedUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  
+  <!-- insert sqlserver -->
+  <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.SysCalendar" 
+  keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">
+    insert into U_CALENDAR (<include refid="base_column"></include> ) values ( 
+      #{calendarType,jdbcType=INTEGER}, 
+      #{produceLine,jdbcType=VARCHAR}, 
+      #{workdateType,jdbcType=INTEGER}, 
+      #{workdate,jdbcType=TIMESTAMP}, 
+      #{dayValue,jdbcType=INTEGER}, 
+      #{weekValue,jdbcType=INTEGER}, 
+      #{monthValue,jdbcType=INTEGER}, 
+      #{yearValue,jdbcType=INTEGER}, 
+      #{morningShift,jdbcType=VARCHAR}, 
+      #{nightShift,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=INTEGER}, 
+      #{createdUserName,jdbcType=VARCHAR}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{updatedUserId,jdbcType=INTEGER}, 
+      #{updatedUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+   <!-- update -->
+  <update id="update" parameterType = "cn.com.gtmc.glaf2.entity.common.SysCalendar">
+    update U_CALENDAR set 
+      CALENDAR_TYPE = #{calendarType,jdbcType=INTEGER},
+      PRODUCE_LINE = #{produceLine,jdbcType=VARCHAR},
+      WORKDATE_TYPE = #{workdateType,jdbcType=INTEGER},
+      WORKDATE = #{workdate,jdbcType=TIMESTAMP},
+      DAY_VALUE = #{dayValue,jdbcType=INTEGER},
+      WEEK_VALUE = #{weekValue,jdbcType=INTEGER},
+      MONTH_VALUE = #{monthValue,jdbcType=INTEGER},
+      YEAR_VALUE = #{yearValue,jdbcType=INTEGER},
+      MORNING_SHIFT = #{morningShift,jdbcType=VARCHAR},
+      NIGHT_SHIFT = #{nightShift,jdbcType=VARCHAR},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      UPDATED_USER_ID = #{updatedUserId,jdbcType=INTEGER},
+      UPDATED_USER_NAME = #{updatedUserName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- findList -->
+  <select id="findList" parameterType = "cn.com.gtmc.glaf2.entity.common.SysCalendar" resultType="cn.com.gtmc.glaf2.entity.common.SysCalendar">
+  	select ID,<include refid="base_column" />
+    from U_CALENDAR
+    where 1 = 1
+      <if test="calendarType != null">
+       AND CALENDAR_TYPE = #{calendarType,jdbcType=INTEGER}
+      </if>
+      <if test="produceLine != null">
+       AND PRODUCE_LINE = #{produceLine,jdbcType=VARCHAR}
+      </if>
+      <if test="workdateType != null">
+       AND WORKDATE_TYPE = #{workdateType,jdbcType=INTEGER}
+      </if>
+      <if test="workdate != null">
+       AND WORKDATE = #{workdate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="dayValue != null">
+       AND DAY_VALUE = #{dayValue,jdbcType=INTEGER}
+      </if>
+      <if test="weekValue != null">
+       AND WEEK_VALUE = #{weekValue,jdbcType=INTEGER}
+      </if>
+      <if test="monthValue != null">
+       AND MONTH_VALUE = #{monthValue,jdbcType=INTEGER}
+      </if>
+      <if test="yearValue != null">
+       AND YEAR_VALUE = #{yearValue,jdbcType=INTEGER}
+      </if>
+      <if test="morningShift != null">
+       AND MORNING_SHIFT = #{morningShift,jdbcType=VARCHAR}
+      </if>
+      <if test="nightShift != null">
+       AND NIGHT_SHIFT = #{nightShift,jdbcType=VARCHAR}
+      </if>
+      <if test="createdUserId != null">
+       AND CREATED_USER_ID = #{createdUserId,jdbcType=INTEGER}
+      </if>
+      <if test="createdUserName != null">
+       AND CREATED_USER_NAME =  #{createdUserName,jdbcType=VARCHAR}
+      </if>
+      <if test="updatedUserId != null">
+       AND UPDATED_USER_ID = #{updatedUserId,jdbcType=INTEGER}
+      </if>
+      <if test="updatedUserName != null">
+       AND UPDATED_USER_NAME = #{updatedUserName,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  <select id="findListByWorkdates"  resultType="cn.com.gtmc.glaf2.entity.common.SysCalendar">
+  	select ID,<include refid="base_column" />
+    from U_CALENDAR
+    where 1 = 1
+      and WORKDATE &gt; =  #{0}
+      and WORKDATE &lt; = #{1}
+      and WORKDATE_TYPE = 0
+  </select>
+  
+  
+  <!-- 删除 -->
+  <delete id="delete" parameterType="java.io.Serializable">
+    delete from U_CALENDAR where id = #{value}
+  </delete>
+  
+</mapper>

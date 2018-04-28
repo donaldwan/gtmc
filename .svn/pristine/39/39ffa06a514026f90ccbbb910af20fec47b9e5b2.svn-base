@@ -1,0 +1,36 @@
+package cn.com.gtmc.glaf2.controller;
+
+import cn.com.gtmc.glaf2.tools.log.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * 请求错误的各种相应跳转
+ *
+ * @author 陈万东
+ * @version V1.0
+ * @Title: ErrorController.java
+ * @Package cn.com.intasect.controller
+ * @Description: 请求错误的各种相应跳转
+ * @date 2015年12月30日 下午2:01:18
+ */
+@Controller
+@RequestMapping("error")
+public class ErrorController {
+
+    private static final Logger LOG = Logger.getLogger(ErrorController.class);
+
+    public ErrorController() {
+        LOG.debug("init...");
+    }
+
+    /**
+     * 403页面跳转
+     *
+     * @return 页面
+     */
+    @RequestMapping("403")
+    public String error403() {
+        return "error/403";
+    }
+}

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/cache 
+    http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <!-- 使用时需要将文件名变更为[spring-cache.xml] -->
+    <!-- Cache的使用方式同Spring-Cache可以参考官方文档 -->
+    <!-- name不能变更，class目前为Memcached实现 -->
+    <bean name="cacheManager" class="cn.com.gtmc.glaf2.cache.memcached.MemCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="cn.com.gtmc.glaf2.cache.memcached.MemCache">
+                    <!-- 设置缓存实例引用 -->
+                    <constructor-arg name="cache" index="0" ref="cache30"/>
+                    <!-- 设置过期时间 -->
+                    <constructor-arg name="expiration" index="1" value="10"/>
+                </bean>
+                <!-- 可以设置多个 -->
+                <bean class="cn.com.gtmc.glaf2.cache.memcached.MemCache">
+                    <constructor-arg name="cache" index="0" ref="cache300"/>
+                    <constructor-arg name="expiration" index="1" value="300"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <!-- 属性配置参见 https://github.com/killme2008/xmemcached/wiki 中文用户指南 -->
+    <bean name="cache30"
+          class="net.rubyeye.xmemcached.utils.XMemcachedClientFactoryBean"
+          destroy-method="shutdown">
+        <!-- 服务器配置 空格隔开为群集 逗号隔开为主备 -->
+        <property name="servers">
+            <value>192.168.118.134:11211 192.168.118.135:11211</value>
+        </property>
+        <!-- 权重 -->
+        <property name="weights">
+            <list>
+                <value>2</value>
+                <value>3</value>
+            </list>
+        </property>
+        <!-- AuthInfo map,only valid on 1.2.5 or later version -->
+        <!-- <property name="authInfoMap">
+            <map>
+                <entry key-ref="server1">
+                    <bean class="net.rubyeye.xmemcached.auth.AuthInfo"
+                        factory-method="typical">
+                        <constructor-arg index="0">
+                            <value>cacheuser</value>
+                        </constructor-arg>
+                        <constructor-arg index="1">
+                            <value>123456</value>
+                        </constructor-arg>
+                    </bean>
+                </entry>
+            </map>
+        </property> -->
+        <!-- 以下name属性必须设置，且需要和代码Value一直 -->
+        <property name="name" value="cache30"/>
+        <!-- nio connection pool size -->
+        <property name="connectionPoolSize" value="2"></property>
+        <!-- Use binary protocol,default is TextCommandFactory -->
+        <!-- 禁用BinaryCommadFactory，框架会报掉 -->
+        <!-- <property name="commandFactory">
+            <bean class="net.rubyeye.xmemcached.command.BinaryCommandFactory"></bean>
+        </property> -->
+        <!-- Distributed strategy -->
+        <property name="sessionLocator">
+            <bean class="net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator"></bean>
+        </property>
+        <!-- Serializing transcoder -->
+        <property name="transcoder">
+            <bean class="net.rubyeye.xmemcached.transcoders.SerializingTranscoder"/>
+        </property>
+        <!-- ByteBuffer allocator -->
+        <property name="bufferAllocator">
+            <bean class="net.rubyeye.xmemcached.buffer.SimpleBufferAllocator"></bean>
+        </property>
+        <!-- Failure mode -->
+        <property name="failureMode" value="false"/>
+    </bean>
+
+    <bean name="cache300"
+          class="net.rubyeye.xmemcached.utils.XMemcachedClientFactoryBean"
+          destroy-method="shutdown">
+        <property name="servers">
+            <value>192.168.118.134:11211,192.168.118.135:11211</value>
+        </property>
+        <property name="name" value="cache300"/>
+    </bean>
+</beans>

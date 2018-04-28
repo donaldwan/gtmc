@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.notify.MessageMapper">
+
+    <sql id="base_column">
+        title,release_time,release_user_id,release_user_name,content,msg_type,
+        status,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name
+    </sql>
+
+    <!-- MySQL insert -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.notify.Message"
+            keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+        insert into u_message(<include refid="base_column"/>)values(
+        #{title,jdbcType=VARCHAR},
+        #{releaseTime,jdbcType=TIMESTAMP},
+        #{releaseUserId,jdbcType=INTEGER},
+        #{releaseUserName,jdbcType=VARCHAR},
+        #{content,jdbcType=VARCHAR},
+        #{msgType,jdbcType=VARCHAR},
+
+        #{status,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- Oracle insert -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.notify.Message" databaseId="oracle">
+        insert into u_message(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{title,jdbcType=VARCHAR},
+        #{releaseTime,jdbcType=TIMESTAMP},
+        #{releaseUserId,jdbcType=INTEGER},
+        #{releaseUserName,jdbcType=VARCHAR},
+        #{content,jdbcType=VARCHAR},
+        #{msgType,jdbcType=VARCHAR},
+
+        #{status,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <!-- sqlserver insert -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.notify.Message"
+            keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">
+        insert into u_message(<include refid="base_column"/>)values(
+        #{title,jdbcType=VARCHAR},
+        #{releaseTime,jdbcType=TIMESTAMP},
+        #{releaseUserId,jdbcType=INTEGER},
+        #{releaseUserName,jdbcType=VARCHAR},
+        #{content,jdbcType=VARCHAR},
+        #{msgType,jdbcType=VARCHAR},
+
+        #{status,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <!-- postgres insert -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.notify.Message" databaseId="postgres">
+        insert into u_message(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{title,jdbcType=VARCHAR},
+        #{releaseTime,jdbcType=TIMESTAMP},
+        #{releaseUserId,jdbcType=INTEGER},
+        #{releaseUserName,jdbcType=VARCHAR},
+        #{content,jdbcType=VARCHAR},
+        #{msgType,jdbcType=VARCHAR},
+
+        #{status,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- update -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.notify.Message">
+        update u_message set
+        status=  #{status,jdbcType=VARCHAR},
+
+        updated_time=  #{updatedTime,jdbcType=TIMESTAMP},
+        updated_user_id=  #{updatedUserId,jdbcType=INTEGER},
+        updated_user_name=  #{updatedUserName,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 删除角色 -->
+    <update id="delete" parameterType="java.io.Serializable">
+       update u_message set status = 'D' where id = #{value}
+    </update>
+
+    <!-- 分页查询 oracle-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.notify.Message" databaseId="oracle">
+        select id,
+        <include refid="base_column"/>
+        from u_message
+        where 1=1
+        <if test="object.title != null and object.title != ''">
+            and title like CONCAT('%',CONCAT(#{object.title},'%')) ESCAPE '\'
+        </if>
+        <if test="object.content != null and object.content != ''">
+            and content like CONCAT('%',CONCAT(#{object.content},'%')) ESCAPE '\'
+        </if>
+        and status = 'A'
+    </select>
+    
+    <!-- 分页查询 mysql -->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.notify.Message" databaseId="mysql">
+        select id,
+        <include refid="base_column"/>
+        from u_message
+        where 1=1
+        <if test="object.title != null and object.title != ''">
+            and title like CONCAT('%',CONCAT(#{object.title},'%'))
+        </if>
+        <if test="object.content != null and object.content != ''">
+            and content like CONCAT('%',CONCAT(#{object.content},'%'))
+        </if>
+        and status = 'A'
+    </select>
+    
+    <!-- 分页查询 sqlserver-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.notify.Message" databaseId="sqlserver">
+        select id,
+        <include refid="base_column"/>
+        from u_message
+        where 1=1
+        <if test="object.title != null and object.title != ''">
+        	and title like ('%' + #{object.title} + '%') ESCAPE '\'
+        </if>
+        <if test="object.content != null and object.content != ''">
+        	and content like ('%' + #{object.content} + '%') ESCAPE '\'
+        </if>
+        and status = 'A'
+    </select>
+    
+     <!-- 分页查询 postgres-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.notify.Message" databaseId="postgres">
+        select id,
+        <include refid="base_column"/>
+        from u_message
+        where 1=1
+        <if test="object.title != null and object.title != ''">
+            and title like CONCAT('%',CONCAT(#{object.title},'%')) ESCAPE '\'
+        </if>
+        <if test="object.content != null and object.content != ''">
+            and content like CONCAT('%',CONCAT(#{object.content},'%')) ESCAPE '\'
+        </if>
+        and status = 'A'
+    </select>
+
+    <!-- MySQL insertMessageNotifyUser -->
+    <!--    <insert id="insertMessageNotifyUser" parameterType="cn.com.gtmc.glaf2.entity.notify.MessageNotifyUser"
+                keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+            insert into u_message_notify_user(message_id,user_id,notify_time,created_time,created_user_id,created_user_name)values(
+            #{messageId,jdbcType=INTEGER},
+            #{userId,jdbcType=INTEGER},
+            #{notifyTime,jdbcType=TIMESTAMP},
+
+            #{createdTime,jdbcType=TIMESTAMP},
+            #{createdUserId,jdbcType=INTEGER},
+            #{createdUserName,jdbcType=VARCHAR}
+            )
+        </insert>-->
+    <insert id="insertMessageNotifyUser" parameterType="java.util.List" databaseId="mysql">
+        <selectKey resultType="java.lang.Integer" keyProperty="id"
+                   order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        <![CDATA[
+                INSERT INTO u_message_notify_user(message_id,user_id,notify_time,created_time,created_user_id,created_user_name)VALUES
+            ]]>
+        <foreach collection="list" item="m" separator=",">
+            <![CDATA[
+            (
+                #{m.messageId,jdbcType=INTEGER},
+                #{m.userId,jdbcType=INTEGER},
+                #{m.notifyTime,jdbcType=TIMESTAMP},
+
+                #{m.createdTime,jdbcType=TIMESTAMP},
+                #{m.createdUserId,jdbcType=INTEGER},
+                #{m.createdUserName,jdbcType=VARCHAR}
+             )
+          ]]>
+        </foreach>
+    </insert>
+
+    <!-- TODO:oracle的批量有问题，需要修改Interceptor -->
+    <!-- Oracle insertMessageNotifyUser -->
+    <insert id="insertMessageNotifyUser" parameterType="java.util.List" useGeneratedKeys="false" databaseId="oracle">
+<!--        <selectKey resultType="java.lang.Integer" keyProperty="id"
+                   order="BEFORE">
+            SELECT 1 FROM DUAL
+        </selectKey>-->
+        INSERT ALL
+        <foreach collection="list" item="item">
+            INTO u_message_notify_user
+            (
+            id,
+            message_id,
+            user_id,
+            notify_time,
+            created_time,
+            created_user_id,
+            created_user_name
+            )
+            VALUES
+            (
+            #{item.id,jdbcType=INTEGER},
+            #{item.messageId,jdbcType=INTEGER},
+            #{item.userId,jdbcType=INTEGER},
+            #{item.notifyTime,jdbcType=TIMESTAMP},
+
+            #{item.createdTime,jdbcType=TIMESTAMP},
+            #{item.createdUserId,jdbcType=INTEGER},
+            #{item.createdUserName,jdbcType=VARCHAR}
+            )
+        </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+    
+    <!-- sqlserver insertMessageNotifyUser -->
+    <insert id="insertMessageNotifyUser" parameterType="java.util.List" databaseId="sqlserver">
+        <selectKey resultType="java.lang.Integer" keyProperty="id"
+                   order="AFTER">
+            SELECT SCOPE_IDENTITY()
+        </selectKey>
+        <![CDATA[
+                INSERT INTO u_message_notify_user(message_id,user_id,notify_time,created_time,created_user_id,created_user_name)VALUES
+            ]]>
+        <foreach collection="list" item="m" separator=",">
+            <![CDATA[
+            (
+                #{m.messageId,jdbcType=INTEGER},
+                #{m.userId,jdbcType=INTEGER},
+                #{m.notifyTime,jdbcType=TIMESTAMP},
+
+                #{m.createdTime,jdbcType=TIMESTAMP},
+                #{m.createdUserId,jdbcType=INTEGER},
+                #{m.createdUserName,jdbcType=VARCHAR}
+             )
+          ]]>
+        </foreach>
+    </insert>
+    
+    <!-- postgres insertMessageNotifyUser -->
+    <insert id="insertMessageNotifyUser" parameterType="java.util.List" useGeneratedKeys="false" databaseId="postgres">
+        <![CDATA[
+                INSERT INTO u_message_notify_user(id,message_id,user_id,notify_time,created_time,created_user_id,created_user_name)VALUES
+            ]]>
+        <foreach collection="list" item="m" separator=",">
+            <![CDATA[
+            (
+            	#{m.id,jdbcType=INTEGER},
+                #{m.messageId,jdbcType=INTEGER},
+                #{m.userId,jdbcType=INTEGER},
+                #{m.notifyTime,jdbcType=TIMESTAMP},
+
+                #{m.createdTime,jdbcType=TIMESTAMP},
+                #{m.createdUserId,jdbcType=INTEGER},
+                #{m.createdUserName,jdbcType=VARCHAR}
+             )
+          ]]>
+        </foreach>
+    </insert>
+
+    <select id="findUnreadSystemMessagesByUser" parameterType="cn.com.gtmc.glaf2.entity.security.User"
+            resultType="cn.com.gtmc.glaf2.entity.notify.Message">
+        SELECT
+            u1.*
+        FROM
+            u_message u1
+        LEFT JOIN u_message_read u2 ON u1.ID = u2.MESSAGE_ID AND u2.USER_ID = #{id,jdbcType=INTEGER}
+        WHERE
+            u1.MSG_TYPE = '01'
+        AND u1.STATUS = 'A'
+        AND u2.ID IS NULL
+    </select>
+
+    <select id="findUnreadUserMessagesByUser" parameterType="cn.com.gtmc.glaf2.entity.security.User"
+            resultType="cn.com.gtmc.glaf2.entity.notify.Message">
+        SELECT
+            u3.*
+        FROM
+            u_message_notify_user u1
+        LEFT JOIN u_message_read u2 ON u1.MESSAGE_READ_ID = u2.ID
+        LEFT JOIN u_message u3 ON u1.MESSAGE_ID = u3.ID AND u3.STATUS = 'A'
+        WHERE
+            u1.USER_ID = #{id,jdbcType=INTEGER}
+        AND u2.ID IS NULL
+        AND u3.ID IS NOT NULL
+    </select>
+
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.notify.Message">
+        select id,
+        <include refid="base_column"/>
+        from u_message where id = #{id} AND STATUS = 'A'
+    </select>
+</mapper>

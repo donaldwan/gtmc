@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.1.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+	http://www.springframework.org/schema/mvc
+  http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+  http://www.springframework.org/schema/websocket
+  http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+
+    <!--默认servlet处理器-->
+    <mvc:default-servlet-handler/>
+    <!--注解配置-->
+    <context:annotation-config/>
+    <!--注解驱动-->
+    <mvc:annotation-driven/>
+    <!-- 注解扫描的包 -->
+    <context:component-scan base-package="cn.com.gtmc.glaf2">
+        <!-- 只扫描的对象 -->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <!-- 排除的对象 -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
+    <!--内容转换管理器-->
+    <bean id="cnManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <!--accept-header匹配-->
+        <property name="ignoreAcceptHeader" value="true"/>
+        <!--支持后缀匹配-->
+        <property name="favorPathExtension" value="true"/>
+        <!--默认文本类型-->
+        <property name="defaultContentType" value="text/html"/>
+        <!--支持参数匹配-->
+        <property name="favorParameter" value="true"/>
+        <!--媒体类型-->
+        <property name="mediaTypes">
+            <map>
+                <!--XML类型-->
+                <entry key="xml" value="application/xml;charset=UTF-8"/>
+                <!--JSON类型-->
+                <entry key="json" value="application/json;charset=UTF-8"/>
+            </map>
+        </property>
+    </bean>
+
+    <!--内容转换视图解析器-->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <!--内容转换管理器-->
+        <property name="contentNegotiationManager" ref="cnManager"/>
+        <!--顺序-->
+        <property name="order" value="0"/>
+        <!--视图解析器-->
+        <property name="viewResolvers">
+            <list>
+                <!--Bean名称视图解析器-->
+                <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+                <!--JSP视图解析器-->
+                <ref bean="jspViewResolver"/>
+                <!--Freemarker视图解析器-->
+                <ref bean="freeMarkerViewResolver"/>
+                <!--Velocity视图解析器-->
+                <ref bean="velocityLayoutViewResolver"/>
+            </list>
+        </property>
+        <!--默认视图-->
+        <property name="defaultViews">
+            <list>
+                <!--JSON视图-->
+                <ref bean="jsonView"/>
+                <!--XML视图-->
+                <ref bean="xmlView"/>
+            </list>
+        </property>
+    </bean>
+
+    <!--JSON视图-->
+    <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+        <property name="extractValueFromSingleKeyModel" value="true"/>
+    </bean>
+    <!--XML视图-->
+    <bean id="xmlView" class="org.springframework.web.servlet.view.xml.MarshallingView">
+        <!--         <property name="marshaller"> -->
+        <!--             <bean class="org.springframework.oxm.xstream.XStreamMarshaller" /> -->
+        <!--         </property> -->
+        <constructor-arg>
+            <bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+                <property name="packagesToScan">
+                    <list>
+                        <value>cn.com.gtmc.glaf2</value>
+                    </list>
+                </property>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <!--JSP视图解析器-->
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="order" value="3"/>
+        <property name="prefix" value="/WEB-INF/smart/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- Freemarker视图配置 -->
+    <bean id="freemarkerConfigurer"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/ftl/"/>
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">10</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="number_format">#.##</prop>
+            </props>
+        </property>
+    </bean>
+    <!--Freemarker视图解析器-->
+    <bean id="freeMarkerViewResolver"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <property name="suffix" value=".ftl"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <property name="exposeSessionAttributes" value="true"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="requestContextAttribute" value="request"/>
+        <property name="order" value="2"/>
+    </bean>
+
+    <!-- velocity视图解析配置 -->
+    <bean id="velocityConfigurer"
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <!-- velocity模板路径 -->
+        <property name="resourceLoaderPath" value="/WEB-INF/vm"/><!-- 模板存放的路径 -->
+        <!-- velocity配置文件路径  或者直接用velocityProperties属性 -->
+        <property name="configLocation" value="classpath:velocity.properties"/>
+    </bean>
+    <!--Velocity视图解析器-->
+    <bean id="velocityLayoutViewResolver"
+          class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".vm"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <property name="layoutUrl" value="layout.vm"/>
+        <property name="order" value="1"/>
+    </bean>
+
+    <!--上传解析器-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--上传文件大小设置-->
+        <property name="maxUploadSize" value="100000000"/>
+    </bean>
+
+    <!-- 国际化配置 -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="messages"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+    </bean>
+    <!--Locale改变拦截器-->
+    <mvc:interceptors>
+        <bean class="cn.com.gtmc.glaf2.interceptor.LocaleChangeInterceptor"/>
+    </mvc:interceptors>
+    <!--Locale解析器-->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
+
+    <!-- 相关插件 -->
+    <import resource="spring-mvc-plugins.xml"/>
+</beans>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.notify.MessageNotifySystemMapper">
+
+    <select id="findReadCountByUser" parameterType="cn.com.gtmc.glaf2.entity.security.User" resultType="int">
+        SELECT
+            count(1)
+        FROM
+            u_message u1
+        LEFT JOIN u_message_read u2 ON u1.ID = u2.MESSAGE_ID AND u2.USER_ID = #{id,jdbcType=INTEGER}
+        WHERE u1.MSG_TYPE = '01'
+        AND u1.STATUS = 'A'
+        AND u2.ID IS NOT NULL
+    </select>
+    
+    <select id="findCount" resultType="int">
+        SELECT
+            count(1)
+        FROM
+            u_message u1
+        WHERE u1.MSG_TYPE = '01'
+        AND u1.STATUS = 'A'
+    </select>
+</mapper>

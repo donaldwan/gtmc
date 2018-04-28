@@ -1,0 +1,99 @@
+*{margin:0;padding:0;}
+
+.ist-bg {
+    width: 100%;
+    margin:0 auto;
+    background: url("../img/login/Bg.jpg") no-repeat;
+    background-size:100% 100%;
+    padding-top:1px;
+}
+.ist-logo {
+    text-align: center;
+    margin-top:65px;
+    margin-bottom:20px;
+}
+.ist-logo-img {vertical-align:middle}
+.ist-logo-word {
+    font-size: 32px;
+    color:#d86c64;
+    vertical-align: middle;
+}
+.ist-register {
+    width:580px;
+    margin:0 auto;
+}
+.ist-top,.ist-footer{
+    height:35px;
+    background-color:rgba(43,43,43,.3);
+}
+.ist-main {
+    padding:20px 50px 0 50px;
+    background-color: rgba(255,255,255,.8);
+}
+.ist-main-head {
+    padding:10px 0;
+    border-bottom:1px solid #9cb8d3;
+}
+.ist-main-head img {vertical-align:middle}
+.ist-remind {
+    font-size:18px;
+    color:#9cb8d3;
+    vertical-align: middle;
+}
+.ist-main-middle {
+    margin-top:30px;
+    height:180px;
+    border-bottom:1px solid #9cb8d3;
+}
+.ist-input {
+    width:100%;
+    height:34px;
+    border:1px solid #e5e6e6;
+    font-weight: bold;
+    color:#b8b9b9;
+    outline-color:#ddbd9c;
+    z-index: 1;
+    float: left;
+}
+.ist-account,.ist-password {
+    float: right;
+    margin-top:-25px;
+    margin-right:10px;
+    z-index:2;
+}
+.ist-margin {margin-top:20px;}
+.ist-bottom {
+    width:200px;
+    padding: 8px 0;
+    text-align: center;
+    background-color: #31b6d5;
+    float: right;
+    margin-top:20px;
+    border-radius:5px;
+    cursor:pointer;
+}
+.ist-register-word {
+    color:white;
+    font-size:15px;
+    vertical-align: middle;
+}
+.ist-img {vertical-align: middle}
+.ist-main-bottom {
+    width:410px;
+    padding:10px 0;
+    text-align: center;
+    margin:0  auto;
+    background-color: #f5acac;
+    font-size: 13px;
+    color:white;
+    margin-top:5px;
+    font-family: microsoft yahei;
+}
+.ist {
+    padding: 10px 10px;
+    background-color: rgba(80,144,192,.9);
+    color:#c9d1b3;
+    font-size: 15px;
+}
+
+

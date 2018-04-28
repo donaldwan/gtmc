@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.common.SMSsendMapper">
+  
+ <sql id="base_column">
+ 	MOBILE_NO,CONTENT,
+ 	CREATED_TIME,CREATED_USER_ID,CREATED_USER_NAME,
+ 	UPDATED_TIME,UPDATED_USER_ID,UPDATED_USER_NAME
+ </sql>
+  
+ <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.common.SMSsend">
+       SELECT ID,
+       <include refid="base_column"/>
+       FROM U_SMS_SEND where ID = #{id}
+  </select>
+
+<!--   查询全部 -->
+  <select id="findAll" resultType="cn.com.gtmc.glaf2.entity.common.SMSsend">
+      SELECT ID,
+      <include refid="base_column"/>
+      FROM U_SMS_SEND
+  </select>
+  
+<!--   新增oracle -->
+  <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.SMSsend" databaseId="oracle">
+    insert into U_SMS_SEND (ID,<include refid="base_column"></include> )
+    values (#{id,jdbcType=INTEGER}, 
+      #{mobileNo,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=INTEGER}, 
+      #{createdUserName,jdbcType=VARCHAR}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{updatedUserId,jdbcType=INTEGER}, 
+      #{updatedUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+<!--   新增mysql -->
+  <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.SMSsend" databaseId="mysql">
+    insert into U_SMS_SEND (<include refid="base_column"></include> )
+    values (
+      #{mobileNo,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=INTEGER}, 
+      #{createdUserName,jdbcType=VARCHAR}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{updatedUserId,jdbcType=INTEGER}, 
+      #{updatedUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  
+  <!--   新增sqlserver -->
+  <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.SMSsend" 
+   keyColumn="id"  keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">
+    insert into U_SMS_SEND (<include refid="base_column"></include> )
+    values (
+      #{mobileNo,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=INTEGER}, 
+      #{createdUserName,jdbcType=VARCHAR}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{updatedUserId,jdbcType=INTEGER}, 
+      #{updatedUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="update" parameterType = "cn.com.gtmc.glaf2.entity.common.SMSsend">
+    update U_SMS_SEND set 
+      MOBILE_NO = #{mobileNo,jdbcType=VARCHAR}, 
+      CONENT = #{content,jdbcType=VARCHAR},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      UPDATED_USER_ID = #{updatedUserId,jdbcType=INTEGER},
+      UPDATED_USER_NAME = #{updatedUserName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+<!--   删除 -->
+  <delete id="delete" parameterType="java.io.Serializable">
+    delete from U_SMS_SEND where id = #{value}
+  </delete>
+  
+</mapper>

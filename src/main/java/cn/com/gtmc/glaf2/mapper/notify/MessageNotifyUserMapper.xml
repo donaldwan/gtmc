@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.notify.MessageNotifyUserMapper">
+
+    <sql id="base_column">
+        message_id,message_read_id,user_id,notify_time,
+        created_time,created_user_id,created_user_name
+    </sql>
+
+    <select id="findUnreadCountByUser" parameterType="cn.com.gtmc.glaf2.entity.security.User" resultType="int">
+        SELECT
+            COUNT(1)
+        FROM
+            u_message_notify_user u1
+        LEFT JOIN u_message_read u2 ON u1.MESSAGE_READ_ID = u2.ID
+        LEFT JOIN u_message u3 ON u1.MESSAGE_ID = u3.ID AND u3.STATUS = 'A'
+        WHERE u1.USER_ID = #{id,jdbcType=INTEGER}
+        AND u2.ID IS NULL
+        AND u3.ID IS NOT NULL
+    </select>
+
+    <update id="updateByMessageAndUser" parameterType="cn.com.gtmc.glaf2.entity.notify.MessageNotifyUser">
+        UPDATE u_message_notify_user SET message_read_id = #{messageReadId,jdbcType=INTEGER}
+        WHERE message_id = #{messageId,jdbcType=INTEGER}
+        AND user_id = #{userId,jdbcType=INTEGER}
+    </update>
+</mapper>

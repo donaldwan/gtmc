@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.security.ScreenMapper">
+    
+    <sql id="base_column">
+        parent_id,screen_name,normal_css,hot_key_css,open_type,resource_id,sort_num,
+        status,remark,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name
+    </sql>
+    
+    <!-- 查询所有的菜单 -->
+    <select id="findAll" resultType="cn.com.gtmc.glaf2.entity.security.Screen">
+      select s.*,r.URI from U_SCREEN s LEFT JOIN U_RESOURCE r on(s.RESOURCE_ID = r.id) where s.status = 'A'
+    </select>
+    <!-- 查询资源对应的菜单画面 -->
+    <select id="findScreenByResource" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Screen">
+        select id,<include refid="base_column" /> from u_screen 
+        where resource_id = #{value}
+    </select>
+    
+    <!-- 查询用户对应的菜单 -->
+    <select id="findScreenByUser" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Screen">
+        SELECT DISTINCT a.*,d.uri FROM u_screen a
+			INNER JOIN u_role_screen b ON a.id = b.screen_id
+			INNER JOIN u_user_role c ON b.role_id = c.role_id
+			LEFT JOIN u_resource d ON a.resource_id = d.id 
+			WHERE c.user_id = #{value}
+    </select>
+    <!-- 查询角色对应的菜单 -->
+    <select id="findScreenByRole" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Screen">
+    	SELECT a.*,d.uri FROM u_screen a
+			INNER JOIN u_role_screen b ON a.id = b.screen_id
+			LEFT JOIN u_resource d ON a.resource_id = d.id 
+		where b.role_id = #{value}
+    </select>
+	<!-- 查询菜单详情 -->
+    <select id="findByScreenId" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Screen">
+        select id,<include refid="base_column" /> from u_screen where id = #{value}
+    </select>
+    
+    <!-- 查询菜单详情 postgres -->
+    <select id="findByScreenId" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Screen" databaseId="postgres">
+        select id,<include refid="base_column" /> from u_screen where id = CAST(#{id} AS INTEGER)
+    </select>
+    
+	<!-- 根据父级ID查询子菜单详情 -->
+    <select id="findByParentId" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Screen">
+        select id,<include refid="base_column" /> from u_screen where parent_id = #{value}
+    </select>
+    
+	<!-- 新增菜单 -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Screen">
+        insert into u_screen(id,<include refid="base_column" />)values(
+        	#{id,jdbcType=VARCHAR},
+        	#{parentId,jdbcType=VARCHAR},
+        	#{screenName,jdbcType=VARCHAR},
+        	#{normalCss,jdbcType=VARCHAR},
+        	#{hotKeyCss,jdbcType=VARCHAR},
+        	#{openType,jdbcType=VARCHAR},
+        	#{resourceId,jdbcType=VARCHAR},
+        	#{sortNum,jdbcType=INTEGER},
+        	'A',
+        	
+        	#{remark,jdbcType=VARCHAR},
+        	#{createdTime,jdbcType=TIMESTAMP},
+        	#{createdUserId,jdbcType=VARCHAR},
+        	#{createdUserName,jdbcType=VARCHAR},
+        	
+        	#{updatedTime,jdbcType=TIMESTAMP},
+        	#{updatedUserId,jdbcType=VARCHAR},
+        	#{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+   	<!-- 新增菜单postgres -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Screen" databaseId="postgres">
+        insert into u_screen(id,<include refid="base_column" />)values(
+        	#{id,jdbcType=INTEGER},
+        	#{parentId,jdbcType=INTEGER},
+        	#{screenName,jdbcType=VARCHAR},
+        	#{normalCss,jdbcType=VARCHAR},
+        	#{hotKeyCss,jdbcType=VARCHAR},
+        	#{openType,jdbcType=VARCHAR},
+        	#{resourceId,jdbcType=INTEGER},
+        	#{sortNum,jdbcType=INTEGER},
+        	'A',
+        	
+        	#{remark,jdbcType=VARCHAR},
+        	#{createdTime,jdbcType=TIMESTAMP},
+        	#{createdUserId,jdbcType=INTEGER},
+        	#{createdUserName,jdbcType=VARCHAR},
+        	
+        	#{updatedTime,jdbcType=TIMESTAMP},
+        	#{updatedUserId,jdbcType=INTEGER},
+        	#{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+      
+	<!-- 修改菜单 -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.security.Screen">
+        update u_screen set
+        	screen_name = #{screenName,jdbcType=VARCHAR},
+        	normal_css = #{normalCss,jdbcType=VARCHAR},
+        	hot_key_css = #{hotKeyCss,jdbcType=VARCHAR},
+        	open_type = #{openType,jdbcType=VARCHAR},
+        	resource_id =  #{resourceId,jdbcType=VARCHAR},
+        	sort_num = #{sortNum,jdbcType=INTEGER},
+        	
+        	updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+        	updated_user_id = #{updatedUserId,jdbcType=INTEGER},
+        	updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+    <!-- 修改菜单 postgres -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.security.Screen" databaseId="postgres">
+        update u_screen set
+        	screen_name = #{screenName,jdbcType=VARCHAR},
+        	normal_css = #{normalCss,jdbcType=VARCHAR},
+        	hot_key_css = #{hotKeyCss,jdbcType=VARCHAR},
+        	open_type = #{openType,jdbcType=VARCHAR},
+        	resource_id =  #{resourceId,jdbcType=INTEGER},
+        	sort_num = #{sortNum,jdbcType=INTEGER},
+        	
+        	updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+        	updated_user_id = #{updatedUserId,jdbcType=INTEGER},
+        	updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+        where id = CAST(#{id} AS INTEGER)
+    </update>
+    
+	<!-- 修改菜单对应资源 -->
+    <update id="updateResource" parameterType="cn.com.gtmc.glaf2.entity.security.Screen">
+        update u_screen set
+        	resource_id = #{resourceId,jdbcType=INTEGER},
+        	
+        	updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+        	updated_user_id = #{updatedUserId,jdbcType=INTEGER},
+        	updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+	<!-- 删除菜单 -->
+    <delete id="delete" parameterType="java.io.Serializable">
+        delete from u_screen where id = #{value}
+    </delete>
+</mapper>
+	

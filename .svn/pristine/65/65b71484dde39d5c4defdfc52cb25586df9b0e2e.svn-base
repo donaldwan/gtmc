@@ -1,0 +1,128 @@
+#job url
+job.web.url=http://localhost:8081
+
+#数据库类型:oracle,mysql,mssql,postgres
+database.type=mysql
+
+#数据库连接配置,mysql
+#jdbc.drivername = com.mysql.jdbc.Driver
+#jdbc.url = jdbc:mysql://192.168.130.236:3306/base?useUnicode=true&characterEncoding=utf-8
+#jdbc.username = intasect
+#jdbc.password = isc6677
+#jdbc.maxPoolSize = 10
+#jdbc.validationQuery = select 1
+
+#GTMC号口Mysql数据库连接配置
+jdbc.drivername = com.mysql.jdbc.Driver
+
+jdbc.url = jdbc:mysql://172.16.136.207:3306/base?useUnicode=true&characterEncoding=utf-8
+jdbc.username = glaf2admin
+jdbc.password = GtmcGLAF2!@#
+
+#jdbc.url = jdbc:mysql://localhost:3306/base?useUnicode=true&characterEncoding=utf-8
+#jdbc.username = root
+#jdbc.password = 123456
+
+jdbc.maxPoolSize = 10
+jdbc.validationQuery = select 1
+
+
+#数据库连接配置,oracle
+#jdbc.drivername = oracle.jdbc.driver.OracleDriver
+#jdbc.url = jdbc:oracle:thin:@192.168.130.248:1521/orcl
+##oracle如果启用了工作流，登录名称需要用大写
+#jdbc.username = DEVELOPER2
+#jdbc.password = cwd689
+#jdbc.validationQuery = select * from dual
+
+#页面生成的随机码的长度，建议4位或者5位，不宜过长。默认为4为
+randCodeLength = 4
+
+#密码过期天数，默认以天为单位
+pwdExpirationDays = 30
+
+#密码修改提醒天数，默认以天为单位
+pwdModificationReminderDays = 3
+
+#邮箱关联配置
+mail.protocol=smtp
+#smtp.exmail.qq.com|smtp.163.com
+mail.host=smtp.163.com
+mail.port=25
+mail.username=XXX@163.com
+mail.password=XXX
+mail.smtp.auth=true
+#如果是网易邮箱， mail.smtp.starttls.enable 设置为 false
+mail.smtp.starttls.enable=false
+
+deptuser.multi=1
+
+#数据库连接配置,dateSourceSqlite
+#BasicDataSource提供了close()方法关闭数据源，所以必须设定destroy-method=”close”属性，
+#以便Spring容器关闭时，数据源能够正常关闭。除以上必须的数据源属性外，
+# 还有一些常用的属性：
+#    defaultAutoCommit：设置从数据源中返回的连接是否采用自动提交机制，默认值为 true；
+#    defaultReadOnly：设置数据源是否仅能执行只读操作， 默认值为 false；
+#    maxActive：最大连接数据库连接数，设置为0时，表示没有限制；
+#    maxIdle：最大等待连接中的数量，设置为0时，表示没有限制；
+#    maxWait：最大等待秒数，单位为毫秒， 超过时间会报出错误信息；
+#    validationQuery：用于验证连接是否成功的查询SQL语句，SQL语句必须至少要返回一行数据，
+#                      如你可以简单地设置为：“select count(*) from user”；
+#    removeAbandoned：是否自我中断，默认是 false ；
+#    removeAbandonedTimeout：几秒后数据连接会自动断开，在removeAbandoned为true，提供该值；
+#    logAbandoned：是否记录中断事件， 默认为 false；
+sqlite.driverClassName = org.sqlite.JDBC
+sqlite.url = jdbc:sqlite:serialNumber.db
+sqlite.maxIdle = 50
+sqlite.maxActive = 50
+sqlite.maxWait = 10000
+sqlite.validationQuery = select 1
+sqlite.testOnBorrow = false
+sqlite.testWhileIdle = true
+sqlite.timeBetweenEvictionRunsMillis = 1200000
+sqlite.minEvictableIdleTimeMillis = 1800000
+sqlite.numTestsPerEvictionRun = 5
+sqlite.defaultAutoCommit = false
+
+#压缩打包下载相关配置信息
+#压缩任务核心线程数
+zip.task.corePoolSize=3
+#压缩任务最大线程数
+zip.task.maxPoolSize=10
+#压缩任务队列最大长度>=mainExecutor.maxSize
+zip.task.queueCapacity=1000
+#压缩任务线程池维护线程所允许的空闲时间
+zip.task.keepAliveSeconds=300
+
+
+#发送短信配置
+#使用短信发送的webservice地址
+sendMessage.targetEendPoint = http://172.16.134.105/axis/services/MessageSendService
+#设置方法名
+sendMessage.sendSmsMessageMethod = sendSmsMessage3
+
+
+#文档管理系统对接参数配置
+#获取token信息的uri
+documentManagement.tokenUri = http://172.16.3.12/org_api/api/v1/oauth2/access_token
+#文档管理系统下载uri
+documentManagement.downloadUri = http://172.16.3.12/wo_api/api/v1/content/download
+#文档管理系统上传uri
+documentManagement.uploadUri = http://172.16.3.12/wo_api/api/v2/content/upload
+#账号登陆名
+documentManagement.username = admin
+#登陆密码
+documentManagement.password = admin123
+#应用的ID，默认值： test
+documentManagement.client_id = test
+#固定值： ‘password’
+documentManagement.grant_type = password
+#默认值：default
+documentManagement.instance = default
+#应用的密钥，默认值：022127e182a934dea7d69s10697s8ac2
+documentManagement.client_secret = 022127e182a934dea7d69s10697s8ac2
+#默认值：zopen
+documentManagement.account = zopen
+#默认值：字符编码UTF-8
+documentManagement.charset = UTF-8
+

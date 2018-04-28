@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.1.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+
+    <!--     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">   -->
+    <!--         <property name="locations">   -->
+    <!--             <list>   -->
+    <!--                 <value>classpath:config.properties</value> -->
+    <!--                 <value>classpath:config-weixin-demo.properties</value>  -->
+    <!--             </list>   -->
+    <!--         </property>   -->
+    <!--         <property name="ignoreUnresolvablePlaceholders" value="true" />    -->
+    <!--     </bean>  -->
+
+    <!-- Properties文件位置配置 -->
+    <context:property-placeholder location="classpath:config.properties"/>
+    <!-- 启用注解 -->
+    <context:annotation-config/>
+    <!-- 组件扫描位置配置 -->
+    <context:component-scan base-package="cn.com.gtmc.glaf2">
+        <!-- 排除过滤器,排除注解Controller -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <aop:aspectj-autoproxy/>
+
+    <!-- Spring上下文辅助类配置 -->
+    <bean id="kbSpringContextHolder" class="cn.com.gtmc.glaf2.context.SpringContextHolder" lazy-init="false"/>
+
+    <!-- <bean class="cn.com.intasect.mybatis.crud.impl.CRUDContextImpl"/> -->
+
+    <!-- 数据元配置 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1"/>
+        <property name="minIdle" value="1"/>
+        <property name="maxActive" value="20"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+
+        <property name="validationQuery" value="${jdbc.validationQuery}"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
+
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+    </bean>
+
+    <!-- 支持数据库类型别名配置 -->
+    <bean id="vendorProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="SQL Server">sqlserver</prop>
+                <prop key="DB2">db2</prop>
+                <prop key="Oracle">oracle</prop>
+                <prop key="MySQL">mysql</prop>
+                <prop key="PostgreSQL">postgres</prop>
+                <prop key="H2">h2</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- 支持数据库ID供应类 -->
+    <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+        <!--属性指定-->
+        <property name="properties" ref="vendorProperties"/>
+    </bean>
+
+    <!-- SQLSession工厂类 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--数据库ID供应类-->
+        <property name="databaseIdProvider" ref="databaseIdProvider"/>
+        <!--配置文件地址-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!--插件配置-->
+        <property name="plugins">
+            <list>
+                <!--分页拦截器-->
+                <bean class="cn.com.gtmc.glaf2.mybatis.plugin.PageInterceptor">
+                    <!--数据库类型-->
+                    <property name="databaseType" value="${database.type}"/>
+                </bean>
+                <!--ID、序列号拦截器-->
+                <bean class="cn.com.gtmc.glaf2.mybatis.plugin.UpdateInterceptor">
+                    <!--字符型ID生成器-->
+                    <property name="stringIdGenerator" ref="stringIdGenerator"/>
+                    <!--数字型ID生成器-->
+                    <property name="intIdGenerator" ref="intIdGenerator"/>
+                    <!--流水号生成器-->
+                    <property name="mSnProcesser" ref="snProcesser"/>
+                </bean>
+            </list>
+        </property>
+        <!-- <property name="mapperLocations" value="classpath*:/cn/com/intasect/mapper/**/*.xml"></property> -->
+    </bean>
+
+    <!--字符型ID生成器-->
+    <bean id="stringIdGenerator" class="cn.com.gtmc.glaf2.idgenerator.StringIdGenerator"/>
+    <!--数字型ID生成器-->
+    <bean id="intIdGenerator" class="cn.com.gtmc.glaf2.idgenerator.IntegerIdGenerator"/>
+    <!-- <bean id="userGroupService" class="cn.com.intasect.service.security.impl.UserGroupServiceImpl" /> -->
+    <!--流水号生成器-->
+    <bean id="snProcesser" class="cn.com.gtmc.glaf2.idgenerator.serialnumber.SNProcesser" scope="singleton"/>
+
+    <!--MyBatis配置文件扫描配置-->
+    <bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--基础包-->
+       <!--  <property name="basePackage">
+            <value>cn.com.intasect.mapper</value>
+        </property> -->
+        <property name="basePackage" value="cn.com.gtmc.glaf2.mapper"/>
+        <!-- SQLSession工厂类 -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!--注解驱动型事务-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--数据源-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    <!-- 有状态流水号号相关      author 高晓丹               Start -->
+    <bean id="dataSourceSqlite" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"> 
+        <property name="driverClassName" value="${sqlite.driverClassName}" /> 
+        <property name="url" value="${sqlite.url}" />
+        <property name="maxIdle" value="${sqlite.maxIdle}"/>
+        <property name="maxActive" value="${sqlite.maxActive}"/>
+        <property name="maxWait" value="${sqlite.maxWait}"/>
+        <property name="validationQuery" value="${sqlite.validationQuery}"/>
+        <property name="testOnBorrow" value="${sqlite.testOnBorrow}"/>
+        <property name="testWhileIdle" value="${sqlite.testWhileIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${sqlite.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${sqlite.minEvictableIdleTimeMillis}"/>
+        <property name="numTestsPerEvictionRun" value="${sqlite.numTestsPerEvictionRun}"/>
+        <property name="defaultAutoCommit" value="${sqlite.defaultAutoCommit}"/>
+    </bean>
+
+    <!--SQLite辅助类-->
+    <bean id="sqliteUtil" class="cn.com.gtmc.glaf2.tools.SQLiteUtil">
+        <property name="dataSource" ref="dataSourceSqlite" />
+    </bean>
+
+    <!--线程池任务执行类-->
+    <bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+        <!-- 核心线程数 -->
+        <property name="corePoolSize" value="10"/>
+        <!-- 最大线程数 -->
+        <property name="maxPoolSize" value="10"/>
+        <!-- 队列最大长度 >=mainExecutor.maxSize -->
+        <property name="queueCapacity" value="1000"/>
+        <!-- 线程池维护线程所允许的空闲时间 -->
+        <property name="keepAliveSeconds" value="300"/>
+        <!-- 线程池对拒绝任务(无线程可用)的处理策略 ThreadPoolExecutor.CallerRunsPolicy策略 ,调用者的线程会执行该任务,如果执行器已关闭,则丢弃.  -->
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+        </property>
+    </bean>
+    <!-- 有状态序列号相关      author 高晓丹               End -->
+
+    <!-- 打包下载关联配置：开始 -->
+    <bean id="zipDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="org.sqlite.JDBC"/>
+        <property name="url" value="jdbc:sqlite:zip.db"/>
+        <property name="maxIdle" value="1"/>
+        <property name="maxActive" value="1"/>
+        <property name="maxWait" value="10000"/>
+        <property name="validationQuery" value="select 1"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="1200000"/>
+        <property name="minEvictableIdleTimeMillis" value="1800000"/>
+        <property name="numTestsPerEvictionRun" value="5"/>
+        <property name="defaultAutoCommit" value="true"/>
+    </bean>
+
+    <!--打包SQLite辅助类-->
+    <bean id="zipSQLiteUtil" class="cn.com.gtmc.glaf2.tools.SQLiteUtil">
+        <!--数据源-->
+        <property name="dataSource" ref="zipDataSource"/>
+    </bean>
+
+    <!--压缩任务DAO-->
+    <bean id="zipTaskDao" class="cn.com.gtmc.glaf2.tools.zip.ZipTaskDao">
+        <!--数据辅助类-->
+        <constructor-arg name="sqlUtil" ref="zipSQLiteUtil"/>
+    </bean>
+
+    <!--打包任务线程池-->
+    <bean id="zipTaskThreadPool"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 核心线程数 -->
+        <property name="corePoolSize" value="${zip.task.corePoolSize}"/>
+        <!-- 最大线程数 -->
+        <property name="maxPoolSize" value="${zip.task.maxPoolSize}"/>
+        <!-- 队列最大长度 >=mainExecutor.maxSize -->
+        <property name="queueCapacity" value="${zip.task.queueCapacity}"/>
+        <!-- 线程池维护线程所允许的空闲时间 -->
+        <property name="keepAliveSeconds" value="${zip.task.keepAliveSeconds}"/>
+        <!-- 线程池对拒绝任务(无线程可用)的处理策略 ThreadPoolExecutor.CallerRunsPolicy策略 ,调用者的线程会执行该任务,如果执行器已关闭,则丢弃.  -->
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+        </property>
+    </bean>
+    <!-- 打包下载关联配置：结束 -->
+
+    <!-- 邮件发送关联配置：开始 -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <!--邮件协议-->
+        <property name="protocol" value="${mail.protocol}" />
+        <!--邮件服务器地址-->
+        <property name="host" value="${mail.host}" />
+        <!--邮件服务器地址端口-->
+        <property name="port" value="${mail.port}" />
+        <!--用户名-->
+        <property name="username" value="${mail.username}" />
+        <!--密码-->
+        <property name="password" value="${mail.password}" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+                <!-- 如果是网易邮箱， mail.smtp.starttls.enable 设置为 false-->
+                <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+            </props>
+        </property>
+    </bean>
+    <!-- 邮件发送关联配置：结束 -->
+
+    <!--Spring安全配置XML-->
+    <import resource="spring-security.xml"/>
+    <!--基盘插件配置XML-->
+    <import resource="spring-context-plugins.xml"/>
+    <!--DEMO配置XML-->
+    <import resource="spring-context-demo.xml"/>
+</beans>

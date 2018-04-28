@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.common.MailTemplateMapper">
+    <sql id="base_column">
+        template_name,
+        status,remark,
+        created_time,created_user_id,created_user_name,
+        updated_time,updated_user_id,updated_user_name
+    </sql>
+    <!-- insert oracle -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.MailTemplate" databaseId="oracle">
+        insert into com_mail_template(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{templateName,jdbcType=VARCHAR},
+
+        #{status,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- insert mysql -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.MailTemplate" databaseId="mysql"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into com_mail_template(<include refid="base_column"/>)values(
+        #{templateName,jdbcType=VARCHAR},
+
+        #{status,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <!-- insert sqlserver -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.MailTemplate" databaseId="sqlserver"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into com_mail_template(<include refid="base_column"/>)values(
+        #{templateName,jdbcType=VARCHAR},
+
+        #{status,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+       <!-- insert postgres -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.MailTemplate" databaseId="postgres">
+        insert into com_mail_template(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{templateName,jdbcType=VARCHAR},
+
+        #{status,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- 根据ID查询 -->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.common.MailTemplate">
+        select id,
+        <include refid="base_column"/>
+        from com_mail_template where id = #{id}
+    </select>
+    
+    	<!-- 根据ID查询 -->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.common.MailTemplate" databaseId="postgres">
+        select id,
+        <include refid="base_column"/>
+        from com_mail_template where id = CAST(#{id} as integer)
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="findByIds" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.common.MailTemplate">
+        select id,
+        <include refid="base_column"/>
+        from com_mail_template where id in
+        <foreach item="idItem" collection="array" open="(" separator="," close=")">
+            #{idItem}
+        </foreach>
+    </select>
+
+    <!-- 分页查询 oracle-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.common.MailTemplate" databaseId="oracle">
+        select id,
+        <include refid="base_column"/>
+        from com_mail_template
+        where 1=1
+        <if test="object != null and object.remark != null and object.remark != ''">
+            and remark like CONCAT('%',CONCAT(#{object.remark},'%')) ESCAPE '\'
+        </if>
+    </select>
+    
+    <!-- 分页查询 mysql-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.common.MailTemplate" databaseId="mysql">
+        select id,
+        <include refid="base_column"/>
+        from com_mail_template
+        where 1=1
+        <if test="object != null and object.remark != null and object.remark != ''">
+            and remark like CONCAT('%',CONCAT(#{object.remark},'%'))
+        </if>
+    </select>
+    
+     <!-- 分页查询 postgres-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.common.MailTemplate" databaseId="postgres">
+        select id,
+        <include refid="base_column"/>
+        from com_mail_template
+        where 1=1
+        <if test="object != null and object.remark != null and object.remark != ''">
+            and remark like CONCAT('%',CONCAT(#{object.remark,jdbcType=VARCHAR},'%')) ESCAPE '\'
+        </if>
+    </select>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.common.MailTemplate">
+        update com_mail_template set
+        template_name=#{templateName,jdbcType=VARCHAR},
+        status=#{status,jdbcType=VARCHAR},
+        remark=#{remark,jdbcType=VARCHAR},
+
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+        updated_user_id = #{updatedUserId,jdbcType=INTEGER},
+        updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+        where id=#{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 根据ID删除 -->
+    <delete id="batchDelete" parameterType="java.io.Serializable">
+        delete
+        from com_mail_template where id in
+        <foreach item="idItem" collection="array" open="(" separator="," close=")">
+            #{idItem}
+        </foreach>
+    </delete>
+</mapper>

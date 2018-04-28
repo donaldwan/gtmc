@@ -1,0 +1,74 @@
+/*
+ * It is advised not to edit the smartadmin_production.css
+ * as this will override any changes you make in the 
+ * later versions of this theme. 
+ * 
+ * We advise that you use use this CSS to override 
+ * SmartAdmin styles. 
+ * 
+ * Rename the stylesheet to whatever your liking so it will stay
+ * unique to you with each update of SmartAdmin.
+ */
+
+/*
+ * INDEX
+ * 
+ * - HTML
+ * - BODY
+ * - CUSTOM STYLES
+ */
+
+ 
+
+.login-info{
+     background-color: rgb(238,238,238);
+ }
+ .btn-header>a{
+     border:none;
+ }
+ /*新增下级按钮*/ /*编辑按钮*/
+ #bt-add-sub,#bt-edit-dept,#bt-add{
+     background-color: rgb(91,179,11);
+     border-color:rgb(91,179,11);
+     float:left;
+ }
+ /*删除按钮*/
+ #bt-delete-dept{
+   background-color: rgb(197,54,56);
+     border-color:rgb(197,54,56);  
+     float:left;
+ }
+ /*查询按钮*/
+ #bt-search{
+     background-color: rgb(197,54,56);
+     border-color:rgb(197,54,56);
+ }
+ /*重置按钮*/
+ #bt-reset{
+     background-color: rgb(235,183,38);
+     border-color:rgb(235,183,38);
+ }
+ /*角色配置按钮*/
+ #bt-role-set{
+     background-color: rgb(59,152,232);
+     border-color:rgb(59,152,232);
+     float:left;
+ }
+ /*状态调整*/
+ #bt-change-status{
+     background-color: rgb(235,183,38);
+     border-color:rgb(235,183,38);
+     float:left;
+ }
+ .alert .alert-info{
+     background-color: white;
+     border:0;
+     margin-bottom:13px;
+ }
+
+ #logo-group{
+     background:rgb(238,238,238) !important;
+ }
+ .project-context>span{
+     display: inline-block !important;
+ }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.security.RoleScreenMapper">
+	<!-- 新增 -->
+	<insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.RoleScreen">
+        insert into u_role_screen(
+        	id,
+        	role_id,
+        	screen_id,
+        	created_time,created_user_id,created_user_name,
+  			updated_time,updated_user_id,updated_user_name)
+  		values(
+  			#{id,jdbcType=VARCHAR},
+        	
+        	#{roleId,jdbcType=VARCHAR},
+        	#{screenId,jdbcType=VARCHAR},
+        	
+        	#{createdTime,jdbcType=TIMESTAMP},
+        	#{createdUserId,jdbcType=VARCHAR},
+        	#{createdUserName,jdbcType=VARCHAR},
+        	
+        	#{updatedTime,jdbcType=TIMESTAMP},
+        	#{updatedUserId,jdbcType=VARCHAR},
+        	#{updatedUserName,jdbcType=VARCHAR}
+  		)
+    </insert>
+    
+ 	<!--    查询关系是否存在 -->
+    <select id="findScreenByRole" parameterType="cn.com.gtmc.glaf2.entity.security.RoleScreen"
+	        resultType="cn.com.gtmc.glaf2.entity.security.RoleScreen">
+	        select id,
+	        	role_id,
+	        	screen_id,
+	        	created_time,created_user_id,created_user_name,
+	  			updated_time,updated_user_id,updated_user_name
+	        from u_role_screen
+	        where role_id = #{roleId} 
+	          and screen_id = #{screenId}
+	</select>
+	
+	  <!-- 删除角色画面关系表 根据roleId和ScreenId -->
+    <delete id="delRoleScreenByRoleAndScreen"  parameterType="cn.com.gtmc.glaf2.entity.security.RoleScreen">
+        delete from u_role_screen
+        where  role_id= #{roleId}
+        and  screen_id=#{screenId} 
+    </delete>
+      <!-- 删除角色画面关系表 根据roleId -->
+    <delete id="delRoleScreenByRole"  parameterType="string">
+        delete from u_role_screen
+        where  role_id= #{value}
+    </delete>
+      <!-- 删除角色画面关系表 根据screenId -->
+    <delete id="delRoleScreenByScreen"  parameterType="java.io.Serializable">
+        delete from u_role_screen
+        where  screen_id= #{value}
+    </delete>
+</mapper>

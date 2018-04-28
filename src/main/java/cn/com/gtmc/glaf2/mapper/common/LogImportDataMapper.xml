@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.common.LogImportDataMapper">
+     <sql id="base_column">
+        executor,data_file,result,error_file,
+        created_time,created_user_id,created_user_name
+    </sql>
+    	<!-- insert oracle -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.LogImportData" databaseId="oracle">
+	    	insert into LOG_IMPORT_DATA(id,<include refid="base_column"/>)values(
+	    		  #{id,jdbcType=INTEGER},
+	        	#{executor,jdbcType=VARCHAR},
+	        	#{dataFile,jdbcType=VARCHAR},
+	        	#{result,jdbcType=BIGINT},
+	        	#{errorFile,jdbcType=VARCHAR},
+	        	
+	        	#{createdTime,jdbcType=TIMESTAMP},
+	        	#{createdUserId,jdbcType=INTEGER},
+	        	#{createdUserName,jdbcType=VARCHAR}
+	    	)
+     </insert>
+     
+     	<!-- insert mysql -->
+     <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.LogImportData" databaseId="mysql"
+     		useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+	    	insert into LOG_IMPORT_DATA(<include refid="base_column"/>)values(
+                #{executor,jdbcType=VARCHAR},
+                #{dataFile,jdbcType=VARCHAR},
+                #{result,jdbcType=BIGINT},
+                #{errorFile,jdbcType=VARCHAR},
+                
+                #{createdTime,jdbcType=TIMESTAMP},
+                #{createdUserId,jdbcType=INTEGER},
+                #{createdUserName,jdbcType=VARCHAR}
+            )
+     </insert>
+     
+    <!-- insert sqlserver -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.LogImportData" databaseId="sqlserver"
+    	useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+	    	insert into LOG_IMPORT_DATA(id,<include refid="base_column"/>)values(
+	    		  #{id,jdbcType=INTEGER},
+	        	#{executor,jdbcType=VARCHAR},
+	        	#{dataFile,jdbcType=VARCHAR},
+	        	#{result,jdbcType=BIGINT},
+	        	#{errorFile,jdbcType=VARCHAR},
+	        	
+	        	#{createdTime,jdbcType=TIMESTAMP},
+	        	#{createdUserId,jdbcType=INTEGER},
+	        	#{createdUserName,jdbcType=VARCHAR}
+	    	)
+     </insert>
+     
+       	<!-- insert postgres -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.LogImportData" databaseId="postgres">
+	    	insert into LOG_IMPORT_DATA(id,<include refid="base_column"/>)values(
+	    		  #{id,jdbcType=INTEGER},
+	        	#{executor,jdbcType=VARCHAR},
+	        	#{dataFile,jdbcType=VARCHAR},
+	        	#{result,jdbcType=BIGINT},
+	        	#{errorFile,jdbcType=VARCHAR},
+	        	
+	        	#{createdTime,jdbcType=TIMESTAMP},
+	        	#{createdUserId,jdbcType=INTEGER},
+	        	#{createdUserName,jdbcType=VARCHAR}
+	    	)
+     </insert>
+    
+       <!-- 根据文件ID查询 -->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.common.LogImportData">
+        select id,<include refid="base_column"></include>
+        from LOG_IMPORT_DATA where id = #{id}
+    </select>
+   
+</mapper>

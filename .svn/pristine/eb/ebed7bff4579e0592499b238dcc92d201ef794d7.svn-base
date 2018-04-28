@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+xmlns:xsi="http://www.w3g.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"
+version="2.0">
+ <tlib-version>1.2</tlib-version>
+ <jsp-version>1.2</jsp-version>
+ <short-name>Button Taglib</short-name>
+ <uri>/button-tags</uri>
+ <description>
+  	按钮操作权限标签
+ </description>
+ 
+ <tag>
+  <name>button</name>
+  <tag-class>cn.com.gtmc.glaf2.tags.AuthenticationButtonTag</tag-class>
+  <body-content>JSP</body-content>
+  <description>页面按钮权限</description>
+  
+   
+  <attribute>
+   <name>code</name>
+   <required>true</required>
+   <rtexprvalue>true</rtexprvalue>
+   <description>权限编码</description>
+  </attribute>
+  
+ </tag>
+ 
+</taglib>

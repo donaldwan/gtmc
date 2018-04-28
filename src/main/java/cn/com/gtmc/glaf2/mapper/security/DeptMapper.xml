@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.security.DeptMapper">
+    <sql id="base_column">
+        parent_id,dept_name,dept_code,status
+ 	</sql>
+    
+    <!-- findById -->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Dept">
+        select id,<include refid="base_column" /> from u_dept where id = #{id}
+    </select>
+    
+    <!-- 根据部门编码查询部门信息 -->
+    <select id="findByDeptCode" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Dept">
+        select id,<include refid="base_column" /> from u_dept where dept_code = #{deptCode} and status = 'A'
+    </select>
+    
+    <!-- findAll -->
+    <select id="findAll" resultType="cn.com.gtmc.glaf2.entity.security.Dept">
+        select id,<include refid="base_column"/> from u_dept where status = 'A'
+    </select>
+	<!-- insert mysql-->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Dept"
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+        insert into u_dept(<include refid="base_column"/>)values(
+			#{parentId,jdbcType=INTEGER},
+			#{deptName,jdbcType=VARCHAR},
+			#{deptCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR}
+		)
+    </insert>
+    <!-- insert oracle-->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Dept" databaseId="oracle">
+        insert into u_dept(id,<include refid="base_column"/>)values(
+        	#{id,jdbcType=INTEGER},
+			#{parentId,jdbcType=INTEGER},
+			#{deptName,jdbcType=VARCHAR},
+			#{deptCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR}
+		)
+    </insert>
+    <!-- insert sqlserver-->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Dept"
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">
+        insert into u_dept(<include refid="base_column"/>)values(
+			#{parentId,jdbcType=INTEGER},
+			#{deptName,jdbcType=VARCHAR},
+			#{deptCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- insert postgres-->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Dept" databaseId="postgres">
+        insert into u_dept(id,<include refid="base_column"/>)values(
+        	#{id,jdbcType=INTEGER},
+			#{parentId,jdbcType=INTEGER},
+			#{deptName,jdbcType=VARCHAR},
+			#{deptCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR}
+		)
+    </insert>
+    <!-- update -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.security.Dept">
+        update u_dept set 
+			dept_name=  #{deptName,jdbcType=VARCHAR},
+			dept_code=  #{deptCode,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+    </update>
+    <!-- findList -->
+    
+    <!-- 部门   逻辑删除 -->
+    <update id="updateStatus" parameterType="cn.com.gtmc.glaf2.entity.security.Dept">
+        update u_dept set
+        	status = #{status,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+            http://www.springframework.org/schema/security
+            http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <!--DEBUG-->
+    <debug/>
+
+    <!--     <beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+    <!--         <beans:property name="locations" value="classpath:jdbc.properties" /> -->
+    <!--     </beans:bean> -->
+
+    <!--Security不起作用页面设置-->
+    <http security="none" pattern="/static/**"/>
+    <http security="none" pattern="/login"/>
+    <http security="none" pattern="/timeout"/>
+    <http security="none" pattern="/*.jsp"/>
+    <http security="none" pattern="/error/*"/>
+    <http security="none" pattern="/demo/*"/>
+
+    <http security="none" pattern="/modeler.html"/>
+    <http security="none" pattern="/service/**"/>
+	
+	<!-- 单点登录 -->
+	<!-- <http security="none" pattern="/loginSSOSession" /> -->
+	
+	
+    <!--认证成功处理器-->
+    <beans:bean id="authenticationSuccessHandler" class="cn.com.gtmc.glaf2.security.impl.AuthenticationSuccessHandler">
+        <!--认证成功后默认URL-->
+        <beans:property name="defaultTargetUrl" value="main#home"/>
+    </beans:bean>
+
+    <!--HTTP配置-->
+    <http auto-config="true">
+        <!--拒绝访问处理器-->
+        <access-denied-handler ref="accessDeniedHandler"/>
+        <!--地址权限配置-->
+        <intercept-url pattern="/timeout" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <!--地址权限配置-->
+        <intercept-url pattern="/**" access="ROLE_ADMIN"/>
+        <!--登录页面配置-->
+        <form-login login-page="/timeout"
+                    authentication-failure-url="/timeout"
+                    authentication-success-handler-ref="authenticationSuccessHandler"/>
+        <!--启用REMEMBER-ME功能-->
+        <!--当用户登陆时，Remember-me机制会创建额外的cookie，cookie的key为：SPRING_SECURITY_REMEMBER_ME_COOKIE -->
+        <!--到期时间：在到达这个时间后使cookie失效，默认为2周   -->
+        <remember-me/>
+        <!--登出配置-->
+        <!-- 删除点单登录的cookies信息 -->
+        <logout invalidate-session="true"
+                logout-url="/j_spring_security_logout"
+                logout-success-url="/login"
+                delete-cookies="salt,tokenid,uid,sam,department,displayname,realm,mail,systemkey"/>
+        <custom-filter ref="urlSecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+
+    </http>
+
+    <!--拒绝访问处理器-->
+    <beans:bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+        <!--错误页面配置-->
+        <beans:property name="errorPage" value="/error/403"/>
+    </beans:bean>
+
+    <!--认证管理器-->
+    <authentication-manager alias="authenticationManager" erase-credentials="false">
+        <!--认证服务提供Service配置-->
+        <authentication-provider user-service-ref="userDetailService">
+            <!--密码加密器-->
+            <password-encoder ref="myPasswordEncoder"></password-encoder>
+        </authentication-provider>
+    </authentication-manager>
+
+    <!--密码加密器-->
+    <beans:bean id="myPasswordEncoder" class="cn.com.gtmc.glaf2.security.MyPasswordEncode"/>
+    <!--用户明细服务-->
+    <beans:bean id="userDetailService" class="cn.com.gtmc.glaf2.security.UserDetailsServiceImpl"/>
+    <!--URL访问决策管理器-->
+    <beans:bean id="urlAccessDecisionManager" class="cn.com.gtmc.glaf2.security.UrlAccessDecisionManager"/>
+    <!--权限管理源-->
+    <beans:bean id="invocationSecurityMetadataSource"
+                class="cn.com.gtmc.glaf2.security.InvocationSecurityMetadataSource" init-method="loadResources"/>
+
+    <!--地址安全过滤器--><!-- 不使用单点登录的时候使用下面SecurityFilter配置 -->
+    <beans:bean id="urlSecurityFilter" class="cn.com.gtmc.glaf2.security.filter.SecurityFilter">
+    
+    <!-- 单点登录，配置的地址安全过滤器 -->  <!-- 使用单点登录的时候使用下面SSOsecurityFilter配置 -->
+    <!-- <beans:bean id="urlSecurityFilter" class="cn.com.gtmc.glaf2.security.filter.SSOsecurityFilter"> -->
+    
+    
+        <!--认证管理器-->
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <!--URL访问决策管理器-->
+        <beans:property name="accessDecisionManager" ref="urlAccessDecisionManager"/>
+        <!--权限管理源-->
+        <beans:property name="securityMetadataSource" ref="invocationSecurityMetadataSource"/>
+    </beans:bean>
+
+    <!-- 定义上下文返回的消息的国际化。 -->
+    <beans:bean id="messageSource"
+                class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <beans:property name="basename"
+                        value="classpath:org/springframework/security/messages_zh_CN"/>
+    </beans:bean>
+    <beans:bean id="localeResolver"
+                class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"/>
+</beans:beans>

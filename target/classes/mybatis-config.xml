@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- 配置 -->
+<configuration>
+    <!-- 设置 -->
+    <settings>
+        <!-- 延迟加载 -->
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <!-- 驼峰转换 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <!-- 实体类别名 -->
+    <typeAliases>
+        <!-- Page类别名配置 -->
+        <typeAlias type="cn.com.gtmc.glaf2.tools.web.Page" alias="Page"/>
+    </typeAliases>
+</configuration>

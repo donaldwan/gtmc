@@ -1,0 +1,98 @@
+package cn.com.gtmc.glaf2.controller.system;
+
+import cn.com.gtmc.glaf2.base.BaseController;
+import cn.com.gtmc.glaf2.base.BaseService;
+import cn.com.gtmc.glaf2.entity.security.Authentication;
+import cn.com.gtmc.glaf2.service.security.AuthenticationService;
+import cn.com.gtmc.glaf2.tools.log.Logger;
+import cn.com.gtmc.glaf2.tools.web.ReturnMessage;
+import org.apache.http.util.TextUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+
+@Controller
+@RequestMapping("system/authentication")
+public class AuthenticationController implements BaseController<Authentication> {
+
+    private static final Logger LOG = Logger.getLogger(AuthenticationController.class);
+
+    @Autowired
+    private AuthenticationService mAuthenticationService;
+
+    @Override
+    public BaseService getService() {
+        return this.mAuthenticationService;
+    }
+
+    @ResponseBody
+    @RequestMapping("find-by-screen")
+    public java.util.List<Authentication> findByScreen(String screenId) {
+        return this.mAuthenticationService.findByScreen(screenId);
+    }
+
+    /**
+     * 添加权限资源
+     *
+     * @param authId authId
+     * @param resourceIds resourceIds
+     * @return 结果
+     */
+    @RequestMapping("add-auth-resource")
+    @ResponseBody
+    public ReturnMessage addAuthResource(String authId, String resourceIds) {
+        LOG.debug("saveAuthResource..authId:{},resourceId:{}", authId, resourceIds);
+        try {
+            String[] ids = resourceIds.split(",");
+            this.mAuthenticationService.addAuthResources(authId, ids);
+            return ok();
+        } catch (Exception ex) {
+            LOG.error("addAuthResource error!", ex);
+            return error();
+        }
+    }
+
+    /**
+     * 修改权限
+     *
+     * @param screenId
+     * @param authId
+     * @return
+     */
+    @RequestMapping("edit-auth-screen")
+    public ModelAndView editAuthScreen(Integer screenId, String authId) {
+        LOG.debug("editAuthScreen..", screenId);
+        ModelAndView mav = new ModelAndView(this.getViewPath() + "/edit");
+        Authentication mAuthentication = new Authentication();
+        if (!TextUtils.isEmpty(authId)) {
+            mAuthentication = mAuthenticationService.findById(authId);
+        } else {
+            mAuthentication.setScreenId(screenId);
+        }
+        mav.addObject("model", mAuthentication);
+        return mav;
+    }
+
+    /**
+     * 删除权限
+     *
+     * @param authIds
+     * @return
+     */
+    @RequestMapping("del-auths")
+    @ResponseBody
+    public ReturnMessage delAuths(String authIds) {
+        LOG.debug("delAuths..", authIds);
+        try {
+            String[] ids = authIds.split(",");
+            this.mAuthenticationService.deleteAuth(ids);
+            return ok();
+        } catch (Exception ex) {
+            LOG.error("delAuths error!", ex);
+            return error();
+        }
+    }
+}

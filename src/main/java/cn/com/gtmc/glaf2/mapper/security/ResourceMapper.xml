@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.security.ResourceMapper">
+
+    <sql id="base_column">
+        resource_name,resource_type,uri,
+        remark,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name
+ 	</sql>
+
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Resource">
+        select id,
+        <include refid="base_column"/>
+        from u_resource where id = #{id}
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="findAll" resultType="cn.com.gtmc.glaf2.entity.security.Resource">
+        select id,
+        <include refid="base_column"/>
+        from u_resource
+    </select>
+
+    <!-- 根据菜单id查询资源 -->
+    <select id="findByScreenId" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="oracle">
+        select * from u_resource r  
+        	join U_SCREEN s on 
+        		s."ID"=#{value,jdbcType=VARCHAR}
+        	 and r."ID"=s.RESOURCE_ID
+    </select>
+    
+     <!-- 根据菜单id查询资源 -->
+    <select id="findByScreenId" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="mysql">
+        select * from u_resource r  
+        	join U_SCREEN s on 
+        		s.ID=#{value,jdbcType=VARCHAR}
+        	 and r.ID=s.RESOURCE_ID
+    </select>
+    
+     <!-- 根据菜单id查询资源  postgres-->
+    <select id="findByScreenId" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="postgres">
+        select * from u_resource r  
+        	join U_SCREEN s on 
+        		s.ID=CAST(#{value} AS INTEGER)
+        	 and r.ID=s.RESOURCE_ID
+    </select>
+
+    <!-- 根据权限查询对应的资源  oracle-->
+    <select id="findByAuthentication" parameterType="cn.com.gtmc.glaf2.entity.security.AuthenticationResource" databaseId="oracle"
+            resultType="cn.com.gtmc.glaf2.entity.security.Resource">
+        select a.* from u_resource a
+			inner join u_authentication_resource b on a.id = b.resource_id
+		where b.authentication_id =  #{authenticationId}
+			and a.resource_name like CONCAT('%',CONCAT(#{resourceName},'%')) ESCAPE '\'
+    </select>
+    
+    <!-- 根据权限查询对应的资源  mysql-->
+    <select id="findByAuthentication" parameterType="cn.com.gtmc.glaf2.entity.security.AuthenticationResource" databaseId="mysql"
+            resultType="cn.com.gtmc.glaf2.entity.security.Resource">
+        select a.* from u_resource a
+			inner join u_authentication_resource b on a.id = b.resource_id
+		where b.authentication_id =  #{authenticationId}
+			and a.resource_name like CONCAT('%',CONCAT(#{resourceName},'%'))
+    </select>
+    
+    <!-- 根据权限查询对应的资源  sqlserver-->
+    <select id="findByAuthentication" parameterType="cn.com.gtmc.glaf2.entity.security.AuthenticationResource" databaseId="sqlserver"
+            resultType="cn.com.gtmc.glaf2.entity.security.Resource">
+        select a.* from u_resource a
+			inner join u_authentication_resource b on a.id = b.resource_id
+		where b.authentication_id =  #{authenticationId}
+			and a.resource_name like ('%' + #{resourceName} + '%') ESCAPE '\'
+    </select>
+    
+     <!-- 根据权限查询对应的资源  postgres-->
+    <select id="findByAuthentication" parameterType="cn.com.gtmc.glaf2.entity.security.AuthenticationResource" databaseId="postgres"
+            resultType="cn.com.gtmc.glaf2.entity.security.Resource">
+        select a.* from u_resource a
+			inner join u_authentication_resource b on a.id = b.resource_id
+		where b.authentication_id =  CAST(#{authenticationId} AS INTEGER)
+			and a.resource_name like CONCAT('%',CONCAT(#{resourceName},'%')) ESCAPE '\'
+    </select>
+
+    <!-- 分页查询  oracle-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="oracle">
+        SELECT
+			ID,
+			resource_name,	
+			uri,
+			remark,
+			created_time,
+			created_user_id,
+			created_user_name,
+			updated_time,
+			updated_user_id,
+			updated_user_name,
+			(select cd.DICTIONARY_VALUE from COM_DICTIONARY cd where cd.DICTIONARY_CODE = resource_type 
+		   and cd.TYPE_CODE='RESOURCE_TYPE') as "resource_type"
+		FROM
+			u_resource
+		WHERE 1=1
+        <if test="object.resourceName != null and object.resourceName != ''">
+            and resource_name like CONCAT('%',CONCAT(#{object.resourceName},'%')) ESCAPE '\'
+        </if>
+        <if test="object.uri != null and object.uri != ''">
+            and uri like CONCAT('%',CONCAT(#{object.uri},'%')) ESCAPE '\'
+        </if>
+    </select>
+    
+    <!-- 分页查询  mysql-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="mysql">
+        SELECT
+			ID,
+			resource_name,	
+			uri,
+			remark,
+			created_time,
+			created_user_id,
+			created_user_name,
+			updated_time,
+			updated_user_id,
+			updated_user_name,
+			(select cd.DICTIONARY_VALUE from COM_DICTIONARY cd where cd.DICTIONARY_CODE = resource_type 
+		   and cd.TYPE_CODE='RESOURCE_TYPE') as "resource_type"
+		FROM
+			u_resource
+		WHERE 1=1
+        <if test="object.resourceName != null and object.resourceName != ''">
+            and resource_name like CONCAT('%',CONCAT(#{object.resourceName},'%')) 
+        </if>
+        <if test="object.uri != null and object.uri != ''">
+            and uri like CONCAT('%',CONCAT(#{object.uri},'%')) 
+        </if>
+    </select>
+    
+    <!-- 分页查询  sqlserver-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="sqlserver">
+        SELECT
+			ID,
+			resource_name,	
+			uri,
+			remark,
+			created_time,
+			created_user_id,
+			created_user_name,
+			updated_time,
+			updated_user_id,
+			updated_user_name,
+			(select cd.DICTIONARY_VALUE from COM_DICTIONARY cd where cd.DICTIONARY_CODE = resource_type 
+		   and cd.TYPE_CODE='RESOURCE_TYPE') as "resource_type"
+		FROM
+			u_resource
+		WHERE 1=1
+        <if test="object.resourceName != null and object.resourceName != ''">
+            and resource_name like ('%' + #{object.resourceName} + '%') ESCAPE '\'
+        </if>
+        <if test="object.uri != null and object.uri != ''">
+            and uri like ('%' + #{object.uri} + '%') ESCAPE '\'
+        </if>
+    </select>
+    
+     <!-- 分页查询  postgres-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="postgres">
+        SELECT
+			ID,
+			resource_name,	
+			uri,
+			remark,
+			created_time,
+			created_user_id,
+			created_user_name,
+			updated_time,
+			updated_user_id,
+			updated_user_name,
+			(select cd.DICTIONARY_VALUE from COM_DICTIONARY cd where cd.DICTIONARY_CODE = resource_type 
+		   and cd.TYPE_CODE='RESOURCE_TYPE') as "resource_type"
+		FROM
+			u_resource
+		WHERE 1=1
+        <if test="object.resourceName != null and object.resourceName != ''">
+            and resource_name like CONCAT('%',CONCAT(#{object.resourceName},'%')) ESCAPE '\'
+        </if>
+        <if test="object.uri != null and object.uri != ''">
+            and uri like CONCAT('%',CONCAT(#{object.uri},'%')) ESCAPE '\'
+        </if>
+    </select>
+
+    <!-- 新增orale -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="oracle">
+        insert into u_resource(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{resourceName,jdbcType=VARCHAR},
+        #{resourceType,jdbcType=VARCHAR},
+        #{uri,jdbcType=VARCHAR},
+
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- 新增 mysql -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="mysql">
+        insert into u_resource(<include refid="base_column"/>)values(
+        #{resourceName,jdbcType=VARCHAR},
+        #{resourceType,jdbcType=VARCHAR},
+        #{uri,jdbcType=VARCHAR},
+
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+        <!-- 新增 sqlserver -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="sqlserver">
+        insert into u_resource(<include refid="base_column"/>)values(
+        #{resourceName,jdbcType=VARCHAR},
+        #{resourceType,jdbcType=VARCHAR},
+        #{uri,jdbcType=VARCHAR},
+
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    	<!-- 新增postgres -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Resource" databaseId="postgres">
+        insert into u_resource(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{resourceName,jdbcType=VARCHAR},
+        #{resourceType,jdbcType=VARCHAR},
+        #{uri,jdbcType=VARCHAR},
+
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- update -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.security.Resource">
+        update u_resource set 
+			resource_name=  #{resourceName,jdbcType=VARCHAR},
+			resource_type = #{resourceType,jdbcType=VARCHAR},
+			uri =  #{uri,jdbcType=VARCHAR},
+			remark=  #{remark,jdbcType=VARCHAR},
+			updated_time=  #{updatedTime,jdbcType=TIMESTAMP},
+			updated_user_id=  #{updatedUserId,jdbcType=INTEGER},
+			updated_user_name=  #{updatedUserName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.io.Serializable">
+        delete from u_resource where id = #{value}
+    </delete>
+    
+    <!-- 删除 postgres-->
+    <delete id="delete" parameterType="java.io.Serializable" databaseId="postgres">
+        delete from u_resource where id = CAST(#{value} AS INTEGER)
+    </delete>
+    
+
+</mapper>
+	

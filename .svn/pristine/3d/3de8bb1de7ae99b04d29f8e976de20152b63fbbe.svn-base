@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.security.DictionaryMapper">
+
+    <sql id="base_column">
+		id,type_code,dictionary_name,dictionary_code,dictionary_value,status,sort_num,remark,
+		created_time,created_user_id,created_user_name
+	</sql>
+    <!-- 分页查询 oracle -->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="oracle">
+        select
+        <include refid="base_column"/>
+        from com_dictionary
+        where 1=1
+        <if test="object != null and object.dictionaryName != null and object.dictionaryName != ''">
+            and dictionary_name like CONCAT('%',CONCAT(#{object.dictionaryName},'%')) ESCAPE '\'
+        </if>
+    </select>
+    
+     <!-- 分页查询 mysql -->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="mysql">
+        select
+        <include refid="base_column"/>
+        from com_dictionary
+        where 1=1
+        <if test="object != null and object.dictionaryName != null and object.dictionaryName != ''">
+            and dictionary_name like CONCAT('%',CONCAT(#{object.dictionaryName},'%'))
+        </if>
+
+    </select>
+     <!-- 分页查询 sqlserver -->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="sqlserver">
+        select
+        <include refid="base_column"/>
+        from com_dictionary
+        where 1=1
+        <if test="object != null and object.dictionaryName != null and object.dictionaryName != ''">
+            and dictionary_name like ('%' + #{object.dictionaryName} + '%')
+        </if>
+    </select>
+    
+     <!-- 分页查询 postgres -->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="postgres">
+        select
+        <include refid="base_column"/>
+        from com_dictionary
+        where 1=1
+        <if test="object != null and object.dictionaryName != null and object.dictionaryName != ''">
+            and dictionary_name like CONCAT('%',CONCAT(#{object.dictionaryName},'%')) ESCAPE '\'
+        </if>
+    </select>
+    
+    <!-- 根据字典id查询字典 -->
+    <select id="findById" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Dictionary">
+        select id,
+        <include refid="base_column"/>
+        from com_dictionary
+        where id=#{value}
+    </select>
+    
+     <!-- 根据字典id查询字典 postgres-->
+    <select id="findById" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="postgres">
+        select id,
+        <include refid="base_column"/>
+        from com_dictionary
+        where id = CAST(#{value} AS INTEGER)
+    </select>
+    <!-- 查询所有字典 -->
+    <select id="findAll" resultType="cn.com.gtmc.glaf2.entity.security.Dictionary">
+        select
+        <include refid="base_column"/>
+        from com_dictionary
+    </select>
+    <!-- 根据字典类型编码查询字典 -->
+    <select id="findByTypeCode" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Dictionary">
+        select
+        <include refid="base_column"/>
+        from com_dictionary
+        where type_code=#{value}
+    </select>
+     <!-- 根据字典类型编码查询字典 postgres-->
+    <select id="findByTypeCode" parameterType="string" 
+    		resultType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="postgres">
+        select
+        <include refid="base_column"/>
+        from com_dictionary
+        where type_code=#{typeCode,jdbcType=VARCHAR}
+    </select>
+    <!-- 根据字典类型编码、字典类型名称查询字典(查重) -->
+    <select id="findByNameAndCode" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Dictionary">
+        select
+        <include refid="base_column"/>
+        from com_dictionary
+        where dictionary_code=#{dictionaryCode} and dictionary_name=#{dictionaryName}
+    </select>
+    <!-- 新增 -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="oracle">
+        insert into com_dictionary(<include refid="base_column"/>)
+        values(
+        SEQ_COMMON.nextval,
+        #{typeCode,jdbcType=VARCHAR},
+        #{dictionaryName,jdbcType=VARCHAR},
+        #{dictionaryCode,jdbcType=VARCHAR},
+        #{dictionaryValue,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{sortNum,jdbcType=INTEGER},
+        #{remark,jdbcType=VARCHAR},
+
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=VARCHAR},
+        #{createdUserName,jdbcType=VARCHAR}
+
+        )
+    </insert>
+
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="mysql">
+        insert into com_dictionary(
+        type_code,
+        dictionary_name,
+        dictionary_code,
+        dictionary_value,
+        status,
+        sort_num,
+        remark,
+		created_time,created_user_id,created_user_name)
+        values(
+        #{typeCode,jdbcType=VARCHAR},
+        #{dictionaryName,jdbcType=VARCHAR},
+        #{dictionaryCode,jdbcType=VARCHAR},
+        #{dictionaryValue,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{sortNum,jdbcType=INTEGER},
+        #{remark,jdbcType=VARCHAR},
+
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=VARCHAR},
+        #{createdUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+        <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="sqlserver">
+        insert into com_dictionary(
+        type_code,
+        dictionary_name,
+        dictionary_code,
+        dictionary_value,
+        status,
+        sort_num,
+        remark,
+		created_time,created_user_id,created_user_name)
+        values(
+        #{typeCode,jdbcType=VARCHAR},
+        #{dictionaryName,jdbcType=VARCHAR},
+        #{dictionaryCode,jdbcType=VARCHAR},
+        #{dictionaryValue,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{sortNum,jdbcType=INTEGER},
+        #{remark,jdbcType=VARCHAR},
+
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=VARCHAR},
+        #{createdUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+     <!-- 新增  postgres-->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Dictionary" databaseId="postgres">
+        insert into com_dictionary(<include refid="base_column"/>)
+        values(
+		#{id,jdbcType=INTEGER},
+        #{typeCode,jdbcType=VARCHAR},
+        #{dictionaryName,jdbcType=VARCHAR},
+        #{dictionaryCode,jdbcType=VARCHAR},
+        #{dictionaryValue,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{sortNum,jdbcType=INTEGER},
+        #{remark,jdbcType=VARCHAR},
+
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=VARCHAR},
+        #{createdUserName,jdbcType=VARCHAR}
+
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.security.Dictionary">
+    	update com_dictionary set 
+	    	type_code=#{typeCode,jdbcType=VARCHAR},
+	    	dictionary_name=#{dictionaryName,jdbcType=VARCHAR},
+	    	dictionary_code=#{dictionaryCode,jdbcType=VARCHAR},
+	    	dictionary_value=#{dictionaryValue,jdbcType=VARCHAR},
+	    	status=#{status,jdbcType=VARCHAR},
+	    	sort_num=#{sortNum,jdbcType=INTEGER},
+	    	remark=#{remark,jdbcType=VARCHAR},
+    	
+	    	updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+	        updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+	        updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+	    where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 删除字典，根据字典id -->
+    <delete id="delete" parameterType="string">
+		delete 
+			from com_dictionary 
+			where id=#{value}
+	</delete>
+	
+		<!-- 删除字典，根据字典id postgres-->
+    <delete id="delete" parameterType="string" databaseId="postgres">
+		delete 
+			from com_dictionary 
+			where id=CAST(#{value} AS INTEGER)
+	</delete>
+
+</mapper>

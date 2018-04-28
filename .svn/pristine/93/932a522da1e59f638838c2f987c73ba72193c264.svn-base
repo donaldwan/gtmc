@@ -1,0 +1,23 @@
+
+
+.wf-time-line{}
+
+.wf-time-line .smart-timeline-icon{
+	left:3px;
+}
+
+.wf-time-line .smart-timeline-list:after{
+	left:18px;
+}
+
+.wf-time-line .well{
+	padding: 5px;
+}
+/** 弹窗右下角拉伸窗体大小图标位置调整 */
+.ui-resizable-handle {
+	left: initial !important;
+}
+
+
+
+

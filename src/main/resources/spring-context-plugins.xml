@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.1.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+
+    <!-- 系统需要的插件在此配置 -->
+    <!-- 工作流插件 
+    	oracle:spring-context-workflow-oracle.xml
+    	mssql:spring-context-workflow-mssql.xml
+    -->
+<!--     <import resource="classpath*:/spring-context-workflow-schema.xml"/> -->
+
+    <!-- Cache插件，需要在此目录级别定义spring-cache.xml来指明使用哪种Cache -->
+    <!-- 	<import resource="classpath*:/spring-context-cache.xml"/>-->
+
+    <!-- WebService框架CXF集成，配置的XML文件名称可以自己定义，此处只是为了将WebService相关配置单独放置 -->
+    <import resource="classpath*:/spring-context-cxf.xml"/>
+
+
+    <!-- 用户、组数据同步 ,主要是工作流引擎需要，如果基盘不需要工作流引擎，需要将listeners值填空即可-->
+    <!--     <bean id="notification" class="cn.com.intasect.notification.SimpleNotification"> -->
+    <!--         <property name="listeners"> -->
+    <!--             <list> -->
+    <!--                 <ref bean="groupNotificationListener"/> -->
+    <!--                 <ref bean="userNotificationListener"/> -->
+    <!--                 <ref bean="membershipNotificationListener"/> -->
+    <!--             </list> -->
+    <!--         </property> -->
+    <!--     </bean> -->
+
+</beans>

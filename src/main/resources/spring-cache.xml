@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/cache
+    http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <!-- 缓存管理器 -->
+    <bean id="cacheManager"
+          class="org.redisson.spring.cache.RedissonSpringCacheManager" depends-on="useSingleServer">
+        <!-- 构造参数 -->
+        <constructor-arg name="redisson">
+            <!-- Redisson客户端 -->
+            <bean class="org.redisson.Redisson" factory-method="create" destroy-method="shutdown">
+                <constructor-arg ref="config"/>
+            </bean>
+        </constructor-arg>
+        <!-- 配置缓存名称 -->
+        <constructor-arg name="config">
+            <map>
+                <entry key="cache300">
+                    <!-- 缓存配置 -->
+                    <bean class="org.redisson.spring.cache.CacheConfig">
+                        <!-- 存活时间 -->
+                        <property name="TTL" value="300000"/> <!-- 300 seconds -->
+                        <!-- 最大保留时间 -->
+                        <property name="maxIdleTime" value="150000"/> <!-- 150 seconds -->
+                    </bean>
+                </entry>
+                <entry key="cache30">
+                    <!-- 缓存配置 -->
+                    <bean class="org.redisson.spring.cache.CacheConfig">
+                        <!-- 存活时间 -->
+                        <property name="TTL" value="30000"/> <!-- 30 seconds -->
+                        <!-- 最大保留时间 -->
+                        <property name="maxIdleTime" value="15000"/> <!-- 15 seconds -->
+                    </bean>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!-- 缓存客户端配置 -->
+    <bean id="config" class="org.redisson.config.Config"/>
+
+    <!-- 以单一Redis实例为例 -->
+    <bean id="useSingleServer" factory-bean="config" factory-method="useSingleServer">
+        <property name="address" value="127.0.0.1:10003"/>
+    </bean>
+
+
+    <!-- 以下是简单集群模式配置 -->
+    <!-- 需要Redis实例配置集群模式 -->
+    <!-- 这里以集群配置为例 -->
+    <!--    <bean id="useClusterServers" factory-bean="config" factory-method="useClusterServers">
+            &lt;!&ndash; 负载均衡:随机调度算法 &ndash;&gt;
+            <property name="loadBalancer">
+                <bean class="org.redisson.connection.balancer.RandomLoadBalancer"/>
+            </property>
+        </bean>-->
+
+    <!-- 配置服务器地址 -->
+    <!--    <bean id="addNodeAddress" factory-bean="useClusterServers" factory-method="addNodeAddress">
+            <constructor-arg value="127.0.0.1:6379"/>
+        </bean>-->
+</beans>

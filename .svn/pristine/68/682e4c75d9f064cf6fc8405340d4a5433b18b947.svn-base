@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.security.UserMapper">
+    <sql id="base_column">
+        dept_id,dept_name,login_name,login_pass,emp_code,name,sex,telephone,mobile,email,user_type,status,
+        remark,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name
+ 	</sql>
+    <sql id="base_column_user_role">
+        user_id,role_id,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name
+ 	</sql>
+    <!-- 根据登录名称查询用户 -->
+    <select id="findByLoginName" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.User">
+        select id,
+        <include refid="base_column"/>
+        from u_user where login_name = #{value}
+    </select>
+
+    <!-- findById -->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.User">
+        select id,
+        <include refid="base_column"/>
+        from u_user where id = #{id}
+    </select>
+    
+    <!-- findById postgres-->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.User" databaseId="postgres">
+        select id,
+        <include refid="base_column"/>
+        from u_user where id = CAST(#{id} as integer)
+    </select>
+
+    <!-- insert mysql-->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.User"
+            keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+
+        insert into u_user(<include refid="base_column"/>)values(
+        #{deptId,jdbcType=INTEGER},
+        #{deptName,jdbcType=VARCHAR},
+        #{loginName,jdbcType=VARCHAR},
+        #{loginPass,jdbcType=VARCHAR},
+        #{empCode,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR},
+        #{sex,jdbcType=VARCHAR},
+        #{telephone,jdbcType=VARCHAR},
+        #{mobile,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR},
+        #{userType,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- insert oracle -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.User" databaseId="oracle">
+
+        insert into u_user(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{deptId,jdbcType=INTEGER},
+        #{deptName,jdbcType=VARCHAR},
+        #{loginName,jdbcType=VARCHAR},
+        #{loginPass,jdbcType=VARCHAR},
+        #{empCode,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR},
+        #{sex,jdbcType=VARCHAR},
+        #{telephone,jdbcType=VARCHAR},
+        #{mobile,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR},
+        #{userType,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <!-- insert sqlserver-->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.User"
+            keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">
+
+        insert into u_user(<include refid="base_column"/>)values(
+        #{deptId,jdbcType=INTEGER},
+        #{deptName,jdbcType=VARCHAR},
+        #{loginName,jdbcType=VARCHAR},
+        #{loginPass,jdbcType=VARCHAR},
+        #{empCode,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR},
+        #{sex,jdbcType=VARCHAR},
+        #{telephone,jdbcType=VARCHAR},
+        #{mobile,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR},
+        #{userType,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <!-- insert postgres -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.User" databaseId="postgres">
+        insert into u_user(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{deptId,jdbcType=INTEGER},
+        #{deptName,jdbcType=VARCHAR},
+        #{loginName,jdbcType=VARCHAR},
+        #{loginPass,jdbcType=VARCHAR},
+        #{empCode,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR},
+        #{sex,jdbcType=VARCHAR},
+        #{telephone,jdbcType=VARCHAR},
+        #{mobile,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR},
+        #{userType,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- update -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.security.User">
+        update u_user set 
+			dept_id=  #{deptId,jdbcType=INTEGER},
+			dept_name=  #{deptName,jdbcType=VARCHAR},
+			emp_code=  #{empCode,jdbcType=VARCHAR},
+			name=  #{name,jdbcType=VARCHAR},
+			sex=  #{sex,jdbcType=VARCHAR},
+			telephone=  #{telephone,jdbcType=VARCHAR},
+			mobile=  #{mobile,jdbcType=VARCHAR},
+			email=  #{email,jdbcType=VARCHAR},
+			user_type=  #{userType,jdbcType=VARCHAR},
+			remark=  #{remark,jdbcType=VARCHAR},
+			
+			updated_time=  #{updatedTime,jdbcType=TIMESTAMP},
+			updated_user_id=  #{updatedUserId,jdbcType=INTEGER},
+			updated_user_name=  #{updatedUserName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 分页查询 -->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.User">
+        select id,
+        <include refid="base_column"/>
+        from u_user
+        where 1=1
+        <if test="object.deptId != null and object.deptId !=0">
+            and dept_id = #{object.deptId}
+        </if>
+        <if test="object.name != null and object.name != ''">
+            and name like CONCAT('%',CONCAT(#{object.name},'%')) ESCAPE '\'
+        </if>
+        <if test="object.empCode != null and object.empCode != ''">
+            and emp_code like CONCAT('%',CONCAT(#{object.empCode},'%')) ESCAPE '\'
+        </if>
+    </select>
+    
+    <!-- 分页查询 sqlserver -->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.User" databaseId="sqlserver">
+        select id,
+        <include refid="base_column"/>
+        from u_user
+        where 1=1
+        <if test="object.deptId != null and object.deptId !=0">
+            and dept_id = #{object.deptId}
+        </if>
+        <if test="object.name != null and object.name != ''">
+            and name like ('%' + #{object.name} + '%') ESCAPE '\'
+        </if>
+        <if test="object.empCode != null and object.empCode != ''">
+            and emp_code like ('%' + #{object.empCode} + '%') ESCAPE '\'
+        </if>
+    </select>
+    
+    <!-- 分页查询 oracle-->
+    <select id="findCustomPage2" parameterType="Page" resultType="java.util.HashMap" databaseId="oracle">
+			select 
+				u.id as "id",
+				u.dept_id as "deptId",
+				u.dept_name as "deptName",
+				u.login_name as "logingName",
+				u.login_pass as "loginPass",
+				u.emp_code as "empCode",
+				u.name as "name",
+				u.sex as "sex",
+				u.telephone as "telephone",
+				u.mobile as "mobile",
+				u.email as "email",
+				u.user_type as "userType",
+				u.status as "status",
+				u.remark as "remark",
+				u.created_time as "createdTime",
+				u.created_user_id as "createdUserId",
+				u.created_user_name as "createdUserName",
+				u.updated_time as "updatedTime",
+				u.updated_user_id as "updatedUserId",
+				u.updated_user_name as "updatedUserName"
+				<foreach collection="object.userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+							,coalesce(t."${userProperty.propertyCode}",null) as "${userProperty.propertyCode}"
+				</foreach>
+			from U_USER u
+			LEFT JOIN(
+				SELECT 
+				user_id
+				<foreach collection="object.userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+						,max(decode(property_code, '${userProperty.propertyCode}', property_value)) as "${userProperty.propertyCode}"
+				</foreach>				
+				from U_USER_PROPERTY_VALUE pv
+				LEFT JOIN U_USER_PROPERTY p on(p.id = pv.property_id)
+				group by user_id
+			) t on(t.user_id = u.id)
+			where 1=1
+		    <if test="object.deptId != null and object.deptId !=0">
+		        and dept_id = #{object.deptId}
+		    </if>
+		    <if test="object.name != null and object.name != ''">
+		        and name like CONCAT('%',CONCAT(#{object.name},'%')) ESCAPE '\'
+		    </if>
+		    <if test="object.empCode != null and object.empCode != ''">
+		        and emp_code like CONCAT('%',CONCAT(#{object.empCode},'%')) ESCAPE '\'
+		    </if>
+		   	<if test="object.sidx != null and object.sidx != ''">
+		   		order by "${object.sidx}" ${object.sord}
+		   	</if>
+    </select>
+    
+    <!-- 分页查询  mysql-->
+    <select id="findCustomPage2" parameterType="Page" resultType="java.util.HashMap" databaseId="mysql">
+			select 
+				u.id as "id",
+				u.dept_id as "deptId",
+				u.dept_name as "deptName",
+				u.login_name as "logingName",
+				u.login_pass as "loginPass",
+				u.emp_code as "empCode",
+				u.name as "name",
+				u.sex as "sex",
+				u.telephone as "telephone",
+				u.mobile as "mobile",
+				u.email as "email",
+				u.user_type as "userType",
+				u.status as "status",
+				u.remark as "remark",
+				u.created_time as "createdTime",
+				u.created_user_id as "createdUserId",
+				u.created_user_name as "createdUserName",
+				u.updated_time as "updatedTime",
+				u.updated_user_id as "updatedUserId",
+				u.updated_user_name as "updatedUserName"
+				<foreach collection="object.userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+							,t.${userProperty.propertyCode} as "${userProperty.propertyCode}"
+				</foreach>
+			from U_USER u
+			LEFT JOIN(
+				SELECT 
+				user_id
+				<foreach collection="object.userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+						<!-- ,max(decode(property_code, '${userProperty.propertyCode}', property_value)) as "${userProperty.propertyCode}" -->
+						,case when property_code='${userProperty.propertyCode}' then property_value else NULL End as "${userProperty.propertyCode}"
+				</foreach>				
+				from U_USER_PROPERTY_VALUE pv
+				LEFT JOIN U_USER_PROPERTY p on(p.id = pv.property_id)
+				group by user_id
+			) t on(t.user_id = u.id)
+			where 1=1
+		    <if test="object.deptId != null and object.deptId !=0">
+		        and dept_id = #{object.deptId}
+		    </if>
+		    <if test="object.name != null and object.name != ''">
+		        and name like CONCAT('%',CONCAT(#{object.name},'%'))
+		    </if>
+		    <if test="object.empCode != null and object.empCode != ''">
+		        and emp_code like CONCAT('%',CONCAT(#{object.empCode},'%'))
+		    </if>
+		   	<if test="object.sidx != null and object.sidx != ''">
+		   		order by "${object.sidx}" ${object.sord}
+		   	</if>
+    </select>
+    
+    <!-- 分页查询 sqlserver-->
+    <select id="findCustomPage2" parameterType="Page" resultType="java.util.HashMap" databaseId="sqlserver">
+			select 
+				u.id as "id",
+				u.dept_id as "deptId",
+				u.dept_name as "deptName",
+				u.login_name as "logingName",
+				u.login_pass as "loginPass",
+				u.emp_code as "empCode",
+				u.name as "name",
+				u.sex as "sex",
+				u.telephone as "telephone",
+				u.mobile as "mobile",
+				u.email as "email",
+				u.user_type as "userType",
+				u.status as "status",
+				u.remark as "remark",
+				u.created_time as "createdTime",
+				u.created_user_id as "createdUserId",
+				u.created_user_name as "createdUserName",
+				u.updated_time as "updatedTime",
+				u.updated_user_id as "updatedUserId",
+				u.updated_user_name as "updatedUserName"
+				<foreach collection="object.userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+							,coalesce(t."${userProperty.propertyCode}",null) as "${userProperty.propertyCode}"
+				</foreach>
+			from U_USER u
+			LEFT JOIN(
+				SELECT 
+				user_id
+				<foreach collection="object.userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+						,max(case property_code	when '${userProperty.propertyCode}' then property_value else NULL End) as "${userProperty.propertyCode}"
+				</foreach>				
+				from U_USER_PROPERTY_VALUE pv
+				LEFT JOIN U_USER_PROPERTY p on(p.id = pv.property_id)
+				group by user_id
+			) t on(t.user_id = u.id)
+			where 1=1
+		    <if test="object.deptId != null and object.deptId !=0">
+		        and dept_id = #{object.deptId}
+		    </if>
+		    <if test="object.name != null and object.name != ''">
+		        and name like ('%' + #{object.name} + '%') ESCAPE '\'
+		    </if>
+		    <if test="object.empCode != null and object.empCode != ''">
+		        and emp_code like ('%' + #{object.empCode} + '%') ESCAPE '\'
+		    </if>
+		   	<if test="object.sidx != null and object.sidx != ''">
+		   		order by "${object.sidx}" ${object.sord}
+		   	</if>
+    </select>
+    
+    <!-- 分页查询 postgres-->
+    <select id="findCustomPage2" parameterType="Page" resultType="java.util.HashMap" databaseId="postgres">
+			select 
+				u.id as "id",
+				u.dept_id as "deptId",
+				u.dept_name as "deptName",
+				u.login_name as "logingName",
+				u.login_pass as "loginPass",
+				u.emp_code as "empCode",
+				u.name as "name",
+				u.sex as "sex",
+				u.telephone as "telephone",
+				u.mobile as "mobile",
+				u.email as "email",
+				u.user_type as "userType",
+				u.status as "status",
+				u.remark as "remark",
+				u.created_time as "createdTime",
+				u.created_user_id as "createdUserId",
+				u.created_user_name as "createdUserName",
+				u.updated_time as "updatedTime",
+				u.updated_user_id as "updatedUserId",
+				u.updated_user_name as "updatedUserName"
+				<foreach collection="object.userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+							,coalesce(t."${userProperty.propertyCode}",null) as "${userProperty.propertyCode}"
+				</foreach>
+			from U_USER u
+			LEFT JOIN(
+				SELECT 
+				user_id
+				<foreach collection="object.userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+				<!-- ,max(decode(property_code, '${userProperty.propertyCode}', property_value)) as "${userProperty.propertyCode}" -->
+						,max(case when property_code='${userProperty.propertyCode}' then property_value else NULL End) as "${userProperty.propertyCode}"
+				</foreach>				
+				from U_USER_PROPERTY_VALUE pv
+				LEFT JOIN U_USER_PROPERTY p on(p.id = pv.property_id)
+				group by user_id
+			) t on(t.user_id = u.id)
+			where 1=1
+		    <if test="object.deptId != null and object.deptId !=0">
+		        and dept_id = CAST(#{object.deptId} AS INTEGER)
+		    </if>
+		    <if test="object.name != null and object.name != ''">
+		        and name like CONCAT('%',CONCAT(#{object.name,jdbcType=VARCHAR},'%')) ESCAPE '\'
+		    </if>
+		    <if test="object.empCode != null and object.empCode != ''">
+		        and emp_code like CONCAT('%',CONCAT(#{object.empCode,jdbcType=VARCHAR},'%')) ESCAPE '\'
+		    </if>
+		   	<if test="object.sidx != null and object.sidx != ''">
+		   		order by "${object.sidx}" ${object.sord,jdbcType=VARCHAR}
+		   	</if>
+    </select>
+    
+    <!-- 分页查询 -->
+    <select id="findCustomPage" resultType="java.util.HashMap">
+<!--      SELECT * FROM (            -->
+<!--     	SELECT t_.*, ROWNUM RN_ FROM ( -->
+<!-- 			select -->
+<!-- 				id as "id", -->
+<!-- 				dept_id as "deptId", -->
+<!-- 				dept_name as "deptName", -->
+<!-- 				login_name as "logingName", -->
+<!-- 				login_pass as "loginPass", -->
+<!-- 				emp_code as "empCode", -->
+<!-- 				name as "name", -->
+<!-- 				sex as "sex", -->
+<!-- 				telephone as "telephone", -->
+<!-- 				mobile as "mobile", -->
+<!-- 				email as "email", -->
+<!-- 				user_type as "userType", -->
+<!-- 				status as "status", -->
+<!-- 			    remark as "remark", -->
+<!-- 			    created_time as "createdTime", -->
+<!-- 				created_user_id as "createdUserId", -->
+<!-- 				created_user_name as "createdUserName", -->
+<!-- 				updated_time as "updatedTime", -->
+<!-- 				updated_user_id as "updatedUserId", -->
+<!-- 				updated_user_name as "updatedUserName" -->
+<!-- 			from u_user -->
+<!-- 			where 1=1 -->
+<!-- 		    <if test="user.deptId != null and user.deptId !=0"> -->
+<!-- 		        and dept_id = #{user.deptId} -->
+<!-- 		    </if> -->
+<!-- 		    <if test="user.name != null and user.name != ''"> -->
+<!-- 		        and name like CONCAT('%',CONCAT(#{user.name},'%')) -->
+<!-- 		    </if> -->
+<!-- 		    <if test="user.empCode != null and user.empCode != ''"> -->
+<!-- 		        and emp_code like CONCAT('%',CONCAT(#{user.empCode},'%')) -->
+<!-- 		    </if> -->
+<!-- 		   	<if test="user.sidx != null and user.sidx != ''"> -->
+<!-- 		   		order by #{user.sidx} -->
+<!-- 			   	<if test="user.sord != null and user.sord != ''"> -->
+<!-- 			   		 #{user.sord} -->
+<!-- 			   	</if> -->
+<!-- 		   	</if> -->
+<!--    		)t_ WHERE ROWNUM &lt;= (#{user.startRows,jdbcType=INTEGER} + #{user.rows,jdbcType=INTEGER}) -->
+<!--    	)  WHERE RN_ &gt; #{user.startRows,jdbcType=INTEGER} -->
+     SELECT * FROM (           
+    	SELECT t_.*, ROWNUM RN_ FROM (
+			select 
+				u.id as "id",
+				u.dept_id as "deptId",
+				u.dept_name as "deptName",
+				u.login_name as "logingName",
+				u.login_pass as "loginPass",
+				u.emp_code as "empCode",
+				u.name as "name",
+				u.sex as "sex",
+				u.telephone as "telephone",
+				u.mobile as "mobile",
+				u.email as "email",
+				u.user_type as "userType",
+				u.status as "status",
+				u.remark as "remark",
+				u.created_time as "createdTime",
+				u.created_user_id as "createdUserId",
+				u.created_user_name as "createdUserName",
+				u.updated_time as "updatedTime",
+				u.updated_user_id as "updatedUserId",
+				u.updated_user_name as "updatedUserName"
+				<foreach collection="userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+							,coalesce(t."${userProperty.propertyCode}",null) as "${userProperty.propertyCode}"
+				</foreach>
+			from U_USER u
+			LEFT JOIN(
+				SELECT 
+				user_id
+				<foreach collection="userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+						,max(decode(property_code, '${userProperty.propertyCode}', property_value)) as "${userProperty.propertyCode}"
+				</foreach>				
+				from U_USER_PROPERTY_VALUE pv
+				LEFT JOIN U_USER_PROPERTY p on(p.id = pv.property_id)
+				group by user_id
+			) t on(t.user_id = u.id)
+			where 1=1
+		    <if test="user.deptId != null and user.deptId !=0">
+		        and dept_id = #{user.deptId}
+		    </if>
+		    <if test="user.name != null and user.name != ''">
+		        and name like CONCAT('%',CONCAT(#{user.name},'%')) ESCAPE '\'
+		    </if>
+		    <if test="user.empCode != null and user.empCode != ''">
+		        and emp_code like CONCAT('%',CONCAT(#{user.empCode},'%')) ESCAPE '\'
+		    </if>
+		   	<if test="user.sidx != null and user.sidx != ''">
+		   		order by "${user.sidx}" ${user.sord}
+		   	</if>
+   		)t_ WHERE ROWNUM &lt;= (#{user.startRows,jdbcType=INTEGER} + #{user.rows,jdbcType=INTEGER})
+   	)  WHERE RN_ &gt; #{user.startRows,jdbcType=INTEGER}
+    </select>
+    
+    <!-- 分页查询  sqlserver-->
+    <select id="findCustomPage" resultType="java.util.HashMap" databaseId="sqlserver">
+     SELECT * FROM (    
+    	SELECT t_.*, row_number() over (order by t_.id asc ) RN_ FROM (
+			select 
+				u.id as "id",
+				u.dept_id as "deptId",
+				u.dept_name as "deptName",
+				u.login_name as "logingName",
+				u.login_pass as "loginPass",
+				u.emp_code as "empCode",
+				u.name as "name",
+				u.sex as "sex",
+				u.telephone as "telephone",
+				u.mobile as "mobile",
+				u.email as "email",
+				u.user_type as "userType",
+				u.status as "status",
+				u.remark as "remark",
+				u.created_time as "createdTime",
+				u.created_user_id as "createdUserId",
+				u.created_user_name as "createdUserName",
+				u.updated_time as "updatedTime",
+				u.updated_user_id as "updatedUserId",
+				u.updated_user_name as "updatedUserName"
+				<foreach collection="userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+							,coalesce(t."${userProperty.propertyCode}",null) as "${userProperty.propertyCode}"
+				</foreach>
+			from U_USER u
+			LEFT JOIN(
+				SELECT 
+				user_id
+				<foreach collection="userPropertyList" item="userProperty" index="index" open="" close="" separator="">
+						,max(case property_code	when '${userProperty.propertyCode}' then property_value else NULL End) as "${userProperty.propertyCode}"
+				</foreach>				
+				from U_USER_PROPERTY_VALUE pv
+				LEFT JOIN U_USER_PROPERTY p on(p.id = pv.property_id)
+				group by user_id
+			) t on(t.user_id = u.id)
+			where 1=1
+		    <if test="user.deptId != null and user.deptId !=0">
+		        and dept_id = #{user.deptId}
+		    </if>
+		    <if test="user.name != null and user.name != ''">
+		        and name like ('%' + #{user.name} + '%') ESCAPE '\'
+		    </if>
+		    <if test="user.empCode != null and user.empCode != ''">
+		        and emp_code like ('%' + #{user.empCode} + '%') ESCAPE '\'
+		    </if>
+		   	<if test="user.sidx != null and user.sidx != ''">
+		   		order by "${user.sidx}" ${user.sord}
+		   	</if>
+   		)t_ 
+   	)t1  WHERE RN_ &gt; #{user.startRows,jdbcType=INTEGER}
+   		AND RN_ &lt;= (#{user.startRows,jdbcType=INTEGER} + #{user.rows,jdbcType=INTEGER})
+    </select>
+    
+    <select id="findCustomTotalPage" parameterType="cn.com.gtmc.glaf2.entity.security.User"  resultType="java.lang.Integer">
+		select count(1)
+		from u_user
+		where 1=1
+	        <if test="deptId != null and deptId !=0">
+	            and dept_id = #{deptId}
+	        </if>
+	        <if test="name != null and name != ''">
+	            and name like CONCAT('%',CONCAT(#{name},'%')) ESCAPE '\'
+	        </if>
+	        <if test="empCode != null and empCode != ''">
+	            and emp_code like CONCAT('%',CONCAT(#{empCode},'%')) ESCAPE '\'
+	        </if>
+    </select>
+    
+    <select id="findCustomTotalPage" parameterType="cn.com.gtmc.glaf2.entity.security.User"  resultType="java.lang.Integer" databaseId="sqlserver">
+		select count(1)
+		from u_user
+		where 1=1
+	        <if test="deptId != null and deptId !=0">
+	            and dept_id = #{deptId}
+	        </if>
+	        <if test="name != null and name != ''">
+	            and name like ('%' + #{name} + '%') ESCAPE '\'
+	        </if>
+	        <if test="empCode != null and empCode != ''">
+	            and emp_code like ('%' + #{empCode} + '%') ESCAPE '\'
+	        </if>
+    </select>
+
+
+    <!-- 用户状态调整 -->
+    <update id="changeStatus" parameterType="cn.com.gtmc.glaf2.entity.security.User">
+        update u_user set
+        	status = #{status,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 查询用户角色 -->
+    <select id="findUserRole" parameterType="java.io.Serializable"
+            resultType="cn.com.gtmc.glaf2.entity.security.UserRole">
+        select id,
+        <include refid="base_column_user_role"/>
+        from u_user_role
+        where user_id = #{id}
+    </select>
+    
+     <!-- 查询用户角色  postgres-->
+    <select id="findUserRole" parameterType="java.io.Serializable"
+            resultType="cn.com.gtmc.glaf2.entity.security.UserRole" databaseId="postgres">
+        select id,
+        <include refid="base_column_user_role"/>
+        from u_user_role
+        where user_id = CAST(#{id} AS INTEGER)
+    </select>
+
+    <!-- 删除用户所有角色 -->
+    <delete id="deleteUserRole" parameterType="java.io.Serializable">
+  		delete from u_user_role 
+  		where user_id = #{id}
+  	</delete>
+
+    <!-- 保存用户角色 -->
+    <insert id="saveUserRole" parameterType="cn.com.gtmc.glaf2.entity.security.UserRole" databaseId="oracle">
+        insert into u_user_role(id,<include refid="base_column_user_role"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{userId,jdbcType=VARCHAR},
+        #{roleId,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="saveUserRole" parameterType="cn.com.gtmc.glaf2.entity.security.UserRole" databaseId="mysql">
+        insert into u_user_role(<include refid="base_column_user_role"/>)values(
+        #{userId,jdbcType=VARCHAR},
+        #{roleId,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <insert id="saveUserRole" parameterType="cn.com.gtmc.glaf2.entity.security.UserRole" databaseId="sqlserver">
+        insert into u_user_role(<include refid="base_column_user_role"/>)values(
+        #{userId,jdbcType=VARCHAR},
+        #{roleId,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <insert id="saveUserRole" parameterType="cn.com.gtmc.glaf2.entity.security.UserRole" databaseId="postgres">
+        insert into u_user_role(id,<include refid="base_column_user_role"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{userId,jdbcType=VARCHAR},
+        #{roleId,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=TIMESTAMP},
+        #{updatedUserId,jdbcType=INTEGER},
+        #{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- 登录日志记录 -->
+    <insert id="insertLoginLog" parameterType="cn.com.gtmc.glaf2.entity.security.LogLogin" databaseId="oracle">
+        insert into log_login(id,user_id,login_name,login_ip,client_platform,client_device_id,created_time,quit_time)values(
+              #{id,jdbcType=INTEGER},
+              #{userId,jdbcType=INTEGER},
+              #{loginName,jdbcType=VARCHAR},
+              #{loginIp,jdbcType=VARCHAR},
+              #{clientPlatform,jdbcType=VARCHAR},
+              #{clientDeviceId,jdbcType=VARCHAR},
+              #{createdTime,jdbcType=TIMESTAMP},
+              #{quitTime,jdbcType=TIMESTAMP}
+            )   
+    </insert>
+
+    <insert id="insertLoginLog" parameterType="cn.com.gtmc.glaf2.entity.security.LogLogin" databaseId="mysql">
+        insert into log_login(user_id,login_name,login_ip,client_platform,client_device_id,created_time,quit_time)values(
+        #{userId,jdbcType=INTEGER},
+        #{loginName,jdbcType=VARCHAR},
+        #{loginIp,jdbcType=VARCHAR},
+        #{clientPlatform,jdbcType=VARCHAR},
+        #{clientDeviceId,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{quitTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <insert id="insertLoginLog" parameterType="cn.com.gtmc.glaf2.entity.security.LogLogin" databaseId="sqlserver">
+        insert into log_login(user_id,login_name,login_ip,client_platform,client_device_id,created_time,quit_time)values(
+        #{userId,jdbcType=INTEGER},
+        #{loginName,jdbcType=VARCHAR},
+        #{loginIp,jdbcType=VARCHAR},
+        #{clientPlatform,jdbcType=VARCHAR},
+        #{clientDeviceId,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{quitTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    
+    <insert id="insertLoginLog" parameterType="cn.com.gtmc.glaf2.entity.security.LogLogin" databaseId="postgres">
+        insert into log_login(id,user_id,login_name,login_ip,client_platform,client_device_id,created_time,quit_time)values(
+              #{id,jdbcType=INTEGER},
+              #{userId,jdbcType=INTEGER},
+              #{loginName,jdbcType=VARCHAR},
+              #{loginIp,jdbcType=VARCHAR},
+              #{clientPlatform,jdbcType=VARCHAR},
+              #{clientDeviceId,jdbcType=VARCHAR},
+              #{createdTime,jdbcType=TIMESTAMP},
+              #{quitTime,jdbcType=TIMESTAMP}
+            )   
+    </insert>
+    
+    <!--修改用户登录密码  -->
+    <update id="updateLoginPassword">
+        update u_user set login_pass=#{0},pwd_change_time=#{2,jdbcType=DATE} where id = #{1}
+    </update>
+</mapper>

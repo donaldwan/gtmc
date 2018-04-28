@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.security.UserPropertyMapper">
+    <sql id="base_column">
+        property_code,property_name,regular,remark,status,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name
+ 	</sql> 
+    <!-- 根据属性Code查询用户属性（去重） -->
+    <select id="isExistPropertyCode" parameterType="cn.com.gtmc.glaf2.entity.security.UserProperty" resultType="cn.com.gtmc.glaf2.entity.security.UserProperty">
+        select id,<include refid="base_column" />
+        from u_user_property where property_code = #{propertyCode,jdbcType=VARCHAR}
+        <if test="id != null and id !=0">
+        	and id != #{id,jdbcType=INTEGER}
+        </if>
+    </select>
+    
+    <!-- 查看单个用户属性详细 -->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.UserProperty">
+        select id,<include refid="base_column" /> from u_user_property where id = #{id}
+    </select>
+    
+    <!-- 查看单个用户属性详细 postgres-->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.UserProperty" databaseId="postgres">
+        select id,<include refid="base_column" /> from u_user_property where id = CAST(#{id} AS INTEGER)
+    </select>
+    
+    <!-- 查看所有属性-->
+    <select id="findAll" resultType="cn.com.gtmc.glaf2.entity.security.UserProperty">
+        select id,<include refid="base_column" /> from u_user_property where status = 'A'
+    </select>
+    
+	<!-- insert mysql-->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.UserProperty" 
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+        insert into u_user_property(id,<include refid="base_column"/>)values(
+			#{id,jdbcType=INTEGER},
+			#{propertyCode,jdbcType=VARCHAR},
+			#{propertyName,jdbcType=VARCHAR},
+			#{regular,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			'A',
+			#{createdTime,jdbcType=TIMESTAMP},
+			#{createdUserId,jdbcType=VARCHAR},
+			#{createdUserName,jdbcType=VARCHAR},
+			#{updatedTime,jdbcType=TIMESTAMP},
+			#{updatedUserId,jdbcType=VARCHAR},
+			#{updatedUserName,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- insert oracle -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.UserProperty" databaseId="oracle">
+        insert into u_user_property(id,<include refid="base_column"/>)values(
+        	#{id,jdbcType=INTEGER},
+			#{propertyCode,jdbcType=VARCHAR},
+			#{propertyName,jdbcType=VARCHAR},
+			#{regular,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			'A',
+			#{createdTime,jdbcType=TIMESTAMP},
+			#{createdUserId,jdbcType=VARCHAR},
+			#{createdUserName,jdbcType=VARCHAR},
+			#{updatedTime,jdbcType=TIMESTAMP},
+			#{updatedUserId,jdbcType=VARCHAR},
+			#{updatedUserName,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- insert sqlserver-->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.UserProperty" 
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">        
+        insert into u_user_property(<include refid="base_column"/>)values(
+			#{propertyCode,jdbcType=VARCHAR},
+			#{propertyName,jdbcType=VARCHAR},
+			#{regular,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			'A',
+			#{createdTime,jdbcType=TIMESTAMP},
+			#{createdUserId,jdbcType=VARCHAR},
+			#{createdUserName,jdbcType=VARCHAR},
+			#{updatedTime,jdbcType=TIMESTAMP},
+			#{updatedUserId,jdbcType=VARCHAR},
+			#{updatedUserName,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- insert postgres -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.UserProperty" databaseId="postgres">
+        insert into u_user_property(id,<include refid="base_column"/>)values(
+        	#{id,jdbcType=INTEGER},
+			#{propertyCode,jdbcType=VARCHAR},
+			#{propertyName,jdbcType=VARCHAR},
+			#{regular,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			'A',
+			#{createdTime,jdbcType=TIMESTAMP},
+			#{createdUserId,jdbcType=VARCHAR},
+			#{createdUserName,jdbcType=VARCHAR},
+			#{updatedTime,jdbcType=TIMESTAMP},
+			#{updatedUserId,jdbcType=VARCHAR},
+			#{updatedUserName,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- update -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.security.UserProperty">
+        update u_user_property set 
+			property_code    = #{propertyCode,jdbcType=VARCHAR},
+			property_name    = #{propertyName,jdbcType=VARCHAR},
+			regular          = #{regular,jdbcType=VARCHAR},
+			remark           = #{remark,jdbcType=VARCHAR},
+			
+			updated_time     = #{updatedTime,jdbcType=TIMESTAMP},
+			updated_user_id  = #{updatedUserId,jdbcType=VARCHAR},
+			updated_user_name= #{updatedUserName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <!-- 分页查询 oracle-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.UserProperty" databaseId="oracle">
+        select id,<include refid="base_column" /> from u_user_property
+        where 1=1
+        <if test="object.propertyCode != null and object.propertyCode !=''">
+            and property_code like CONCAT('%',CONCAT(#{object.propertyCode},'%')) ESCAPE '\'
+        </if>
+        <if test="object.propertyName != null and object.propertyName != ''">
+            and property_name like CONCAT('%',CONCAT(#{object.propertyName},'%')) ESCAPE '\'
+        </if>
+        <if test="object.status != null and object.status != ''">
+            and status = #{object.status}
+        </if>
+    </select>
+    
+    <!-- 分页查询 mysql-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.UserProperty" databaseId="mysql">
+        select id,<include refid="base_column" /> from u_user_property
+        where 1=1
+        <if test="object.propertyCode != null and object.propertyCode !=''">
+            and property_code like CONCAT('%',CONCAT(#{object.propertyCode},'%'))
+        </if>
+        <if test="object.propertyName != null and object.propertyName != ''">
+            and property_name like CONCAT('%',CONCAT(#{object.propertyName},'%'))
+        </if>
+        <if test="object.status != null and object.status != ''">
+            and status = #{object.status}
+        </if>
+    </select>
+    
+    <!-- 分页查询 sqlserver-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.UserProperty" databaseId="sqlserver">
+        select id,<include refid="base_column" /> from u_user_property
+        where 1=1
+        <if test="object.propertyCode != null and object.propertyCode !=''">
+            and property_code like ('%' + #{object.propertyCode} + '%') ESCAPE '\'
+        </if>
+        <if test="object.propertyName != null and object.propertyName != ''">
+            and property_name like ('%' + #{object.propertyName} + '%') ESCAPE '\'
+        </if>
+        <if test="object.status != null and object.status != ''">
+            and status = #{object.status}
+        </if>
+    </select>
+    
+     <!-- 分页查询 postgres-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.UserProperty" databaseId="postgres">
+        select id,<include refid="base_column" /> from u_user_property
+        where 1=1
+        <if test="object.propertyCode != null and object.propertyCode !=''">
+            and property_code like CONCAT('%',CONCAT(#{object.propertyCode},'%')) ESCAPE '\'
+        </if>
+        <if test="object.propertyName != null and object.propertyName != ''">
+            and property_name like CONCAT('%',CONCAT(#{object.propertyName},'%')) ESCAPE '\'
+        </if>
+        <if test="object.status != null and object.status != ''">
+            and status = #{object.status}
+        </if>
+    </select>
+    
+    
+    <!-- 查询用户属性值 -->
+    <select id="findUserPropertyValue" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.UserProperty">
+        select up.property_code,up.property_name,up.regular,upv.property_value
+        from u_user u
+		inner join u_user_property_value upv on(u.id = upv.user_id)
+		inner join u_user_property up on(up.id = upv.property_id)
+		where up.status = 'A' and u.id = #{id,jdbcType=INTEGER}
+    </select>
+    
+     <!-- 用户属性状态调整 -->
+    <update id="changeStatus" parameterType="cn.com.gtmc.glaf2.entity.security.UserProperty">
+        update u_user_property set
+        	status = #{status,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <!-- 删除用户属性值 -->
+    <delete id="deleteUserPropertyValue" parameterType="java.io.Serializable">
+  		delete from u_user_property_value 
+  		where user_id = #{userId,jdbcType=INTEGER}
+  	</delete>
+    
+	<!-- insert mysql-->
+    <insert id="insertUserPropertyValue" parameterType="cn.com.gtmc.glaf2.entity.security.UserPropertyValue" 
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+        
+        insert into u_user_property_value(id,user_id,property_id,property_value)values(
+        	#{id,jdbcType=INTEGER},
+			#{userId,jdbcType=INTEGER},
+			#{propertyId,jdbcType=INTEGER},
+			#{propertyValue,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- insert oracle -->
+    <insert id="insertUserPropertyValue" parameterType="cn.com.gtmc.glaf2.entity.security.UserPropertyValue" databaseId="oracle">
+        
+         insert into u_user_property_value(id,user_id,property_id,property_value)values(
+         	#{id,jdbcType=INTEGER},
+			#{userId,jdbcType=INTEGER},
+			#{propertyId,jdbcType=INTEGER},
+			#{propertyValue,jdbcType=VARCHAR}
+		 )
+    </insert>
+    
+    <!-- insert sqlserver-->
+    <insert id="insertUserPropertyValue" parameterType="cn.com.gtmc.glaf2.entity.security.UserPropertyValue" 
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">
+        insert into u_user_property_value(user_id,property_id,property_value)values(
+        	<!-- #{id,jdbcType=INTEGER},-->
+			#{userId,jdbcType=INTEGER},
+			#{propertyId,jdbcType=INTEGER},
+			#{propertyValue,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+     <!-- insert postgres -->
+    <insert id="insertUserPropertyValue" parameterType="cn.com.gtmc.glaf2.entity.security.UserPropertyValue" databaseId="postgres">
+        
+         insert into u_user_property_value(id,user_id,property_id,property_value)values(
+         	#{id,jdbcType=INTEGER},
+			#{userId,jdbcType=INTEGER},
+			#{propertyId,jdbcType=INTEGER},
+			#{propertyValue,jdbcType=VARCHAR}
+		 )
+    </insert>
+</mapper>

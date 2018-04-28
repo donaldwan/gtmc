@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.security.AuthenticationMapper">
+
+	<sql id="base_column">
+        auth_name,auth_code,screen_id,
+        remark,
+        created_time,created_user_id,created_user_name,
+  		updated_time,updated_user_id,updated_user_name
+    </sql>
+    
+    <!-- 根据资源查询对应的权限 -->
+    <select id="findAuthByResource" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Authentication">
+        SELECT a.* FROM u_authentication a 
+			INNER JOIN u_authentication_resource b ON a.id = b.authentication_id
+		WHERE b.resource_id = #{value}
+    </select>
+    
+    
+    <!-- 查询用户对应的资源权限 -->
+    <select id="findAuthByUser" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Authentication">
+    	SELECT a.* FROM u_authentication a 
+			INNER JOIN u_role_authentication b ON a.id = b.authentication_id
+			INNER JOIN u_role c ON b.role_id = c.id 
+			INNER JOIN u_user_role d ON c.id = d.role_id 
+		WHERE d.user_id = #{value}
+    </select>
+    
+    <!-- 查询某个菜单的权限 -->
+    <select id="findAuthByScreen" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Authentication">
+        SELECT * FROM u_authentication
+		WHERE screen_id = #{value}
+    </select>
+    
+    <!-- 查询某个角色对应的权限 -->
+    <select id="findAuthByRole" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Authentication">
+        SELECT a.* FROM u_authentication a
+			INNER JOIN u_role_authentication b ON a.id = b.authentication_id
+			WHERE b.role_id = #{value}
+    </select>
+    
+    <!-- 查询菜单对应的权限 -->
+    <select id="findByScreen" resultType="cn.com.gtmc.glaf2.entity.security.Authentication" parameterType="java.io.Serializable">
+        select id,<include refid="base_column" /> from u_authentication
+        where screen_id = #{value,jdbcType=INTEGER}
+    </select>
+
+    <!-- 查询菜单对应的权限 - postgres -->
+    <select id="findByScreen" resultType="cn.com.gtmc.glaf2.entity.security.Authentication" parameterType="java.io.Serializable" databaseId="postgres">
+        select id,<include refid="base_column" /> from u_authentication
+        where screen_id = #{value}
+    </select>
+    
+    <!-- 查询权限资源 -->
+    <select id="findResourceByAuth" parameterType="cn.com.gtmc.glaf2.entity.security.AuthenticationResource"
+        resultType="cn.com.gtmc.glaf2.entity.security.AuthenticationResource">
+        select id,
+        	authentication_id,
+        	resource_id,
+        	created_time,created_user_id,created_user_name,
+  			updated_time,updated_user_id,updated_user_name
+        from u_authentication_resource 
+        where authentication_id = #{authenticationId,jdbcType=VARCHAR} 
+          and resource_id = #{resourceId,jdbcType=VARCHAR}
+    </select>
+    
+    <!-- 添加权限资源关系表 -->
+    <insert id="addAuthResource" parameterType="cn.com.gtmc.glaf2.entity.security.AuthenticationResource">
+        insert into u_authentication_resource(
+        	id,
+        	authentication_id,
+        	resource_id,
+        	created_time,created_user_id,created_user_name,
+  			updated_time,updated_user_id,updated_user_name)
+  		values(
+  			#{id,jdbcType=VARCHAR},
+        	
+        	#{authenticationId,jdbcType=INTEGER},
+        	#{resourceId,jdbcType=VARCHAR},
+        	
+        	#{createdTime,jdbcType=TIMESTAMP},
+        	#{createdUserId,jdbcType=INTEGER},
+        	#{createdUserName,jdbcType=VARCHAR},
+        	
+        	#{updatedTime,jdbcType=TIMESTAMP},
+        	#{updatedUserId,jdbcType=INTEGER},
+        	#{updatedUserName,jdbcType=VARCHAR}
+  		)
+    </insert>
+    
+    <!-- 根据权限ID删除角色权限 -->
+    <delete id="delRoleAuthByAuthId" parameterType="java.io.Serializable">
+        delete from u_role_authentication where authentication_id = #{value}
+    </delete>
+    
+    <!-- 根据权限ID删除角色权限 -->
+    <delete id="delRoleAuthByAuthId" parameterType="java.io.Serializable" databaseId="postgres">
+        delete from u_role_authentication where authentication_id = CAST(#{value} AS INTEGER)
+    </delete>
+    
+    <!-- 根据权限ID删除权限资源 -->
+    <delete id="delAuthResourceByAuthId"  parameterType="java.io.Serializable">
+        delete from u_authentication_resource
+        where authentication_id = #{value} 
+    </delete>
+    
+     <!-- 根据权限ID删除权限资源postgres -->
+    <delete id="delAuthResourceByAuthId"  parameterType="java.io.Serializable" databaseId="postgres">
+        delete from u_authentication_resource
+        where authentication_id = CAST(#{value} AS INTEGER)
+    </delete>
+    
+    <!-- 根据权限ID删除权限 -->
+    <delete id="delete" parameterType="java.io.Serializable">
+        delete from u_authentication where id = #{value}
+    </delete>
+    
+    <!-- 根据权限ID删除权限 postgres-->
+    <delete id="delete" parameterType="java.io.Serializable" databaseId="postgres">
+        delete from u_authentication where id = CAST(#{value} AS INTEGER)
+    </delete>
+    
+    <!-- 新增菜单权限 -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Authentication" keyColumn="id" keyProperty="id">
+        insert into u_authentication(id,<include refid="base_column" />)values(
+        	#{id,jdbcType=VARCHAR},
+        	
+        	#{authName,jdbcType=VARCHAR},
+        	#{authCode,jdbcType=VARCHAR},
+        	#{screenId,jdbcType=VARCHAR},
+        	
+        	#{remark,jdbcType=VARCHAR},
+        	#{createdTime,jdbcType=TIMESTAMP},
+        	#{createdUserId,jdbcType=INTEGER},
+        	#{createdUserName,jdbcType=VARCHAR},
+        	
+        	#{updatedTime,jdbcType=TIMESTAMP},
+        	#{updatedUserId,jdbcType=INTEGER},
+        	#{updatedUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <!-- 查询权限详情 -->
+    <select id="findById" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Authentication">
+        select id,<include refid="base_column" /> from u_authentication where id =  #{value,jdbcType=VARCHAR}
+    </select>
+    
+     <!-- 查询权限详情 postgres-->
+    <select id="findById" parameterType="string" resultType="cn.com.gtmc.glaf2.entity.security.Authentication" databaseId="postgres">
+        select id,<include refid="base_column" /> from u_authentication where id =  CAST(#{value} AS INTEGER)
+    </select>
+    
+    <!-- 修改权限 -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.security.Authentication">
+        update u_authentication set
+        	auth_name = #{authName,jdbcType=VARCHAR},
+        	auth_code = #{authCode,jdbcType=VARCHAR},
+        	updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+        	updated_user_id = #{updatedUserId,jdbcType=INTEGER},
+        	updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+        
+    </update>
+</mapper>
+	

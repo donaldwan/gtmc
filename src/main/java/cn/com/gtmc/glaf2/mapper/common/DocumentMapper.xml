@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.common.DocumentMapper">
+
+<sql id ="base_column">
+   REFER_TYPE, REFER_KEY,FILE_NAME,FILE_TYPE,FILE_PATH,FILE_SIZE,LOCAL_PATH,FILE_UID,
+   PERMISSION_DOWN,PERMISSION_TYPE,PERMISSION_USER,PERMISSION_DEPT,PERMISSION_ROLE,
+   CREATED_TIME,CREATED_USER_ID,CREATED_USER_NAME,
+ 	UPDATED_TIME,UPDATED_USER_ID,UPDATED_USER_NAME
+</sql>
+
+<select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.common.Document">
+       SELECT ID,
+       <include refid="base_column"/>
+       FROM U_DOCUMENT where ID = #{id}
+</select>
+
+<!-- 查询全部 -->
+<select id="findAll" resultType="cn.com.gtmc.glaf2.entity.common.Document">
+      SELECT ID,
+      <include refid="base_column"/>
+      FROM U_DOCUMENT
+</select>
+
+<!--   新增oracle -->
+<insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.Document" databaseId="oracle">
+  insert into U_DOCUMENT (ID,<include refid="base_column"></include> )
+  values (#{id,jdbcType=INTEGER}, 
+    #{referType,jdbcType=VARCHAR}, 
+    #{referKey,jdbcType=VARCHAR}, 
+    #{fileName,jdbcType=VARCHAR}, 
+    #{fileType,jdbcType=VARCHAR}, 
+    #{filePath,jdbcType=VARCHAR}, 
+    #{fileSize,jdbcType=BIGINT},
+    #{localPath,jdbcType=VARCHAR}, 
+    #{fileUid,jdbcType=VARCHAR}, 
+    #{permissionDown,jdbcType=VARCHAR}, 
+    #{permissionType,jdbcType=VARCHAR}, 
+    #{permissionUser,jdbcType=VARCHAR}, 
+    #{permissionDept,jdbcType=VARCHAR}, 
+    #{permissionRole,jdbcType=VARCHAR}, 
+    #{createdTime,jdbcType=TIMESTAMP}, 
+    #{createdUserId,jdbcType=INTEGER}, 
+    #{createdUserName,jdbcType=VARCHAR}, 
+    #{updatedTime,jdbcType=TIMESTAMP}, 
+    #{updatedUserId,jdbcType=INTEGER}, 
+    #{updatedUserName,jdbcType=VARCHAR}
+   )
+</insert>
+
+<!-- insert mysql -->
+<insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.Document" databaseId="mysql"
+	useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+  insert into U_DOCUMENT (ID,<include refid="base_column"></include> )
+  values (#{id,jdbcType=INTEGER}, 
+    #{referType,jdbcType=VARCHAR}, 
+    #{referKey,jdbcType=VARCHAR}, 
+    #{fileName,jdbcType=VARCHAR}, 
+    #{fileType,jdbcType=VARCHAR}, 
+    #{filePath,jdbcType=VARCHAR}, 
+    #{fileSize,jdbcType=BIGINT},
+    #{localPath,jdbcType=VARCHAR}, 
+    #{fileUid,jdbcType=VARCHAR},  
+    #{permissionDown,jdbcType=VARCHAR}, 
+    #{permissionType,jdbcType=VARCHAR}, 
+    #{permissionUser,jdbcType=VARCHAR}, 
+    #{permissionDept,jdbcType=VARCHAR}, 
+    #{permissionRole,jdbcType=VARCHAR}, 
+    #{createdTime,jdbcType=TIMESTAMP}, 
+    #{createdUserId,jdbcType=INTEGER}, 
+    #{createdUserName,jdbcType=VARCHAR}, 
+    #{updatedTime,jdbcType=TIMESTAMP}, 
+    #{updatedUserId,jdbcType=INTEGER}, 
+    #{updatedUserName,jdbcType=VARCHAR}
+   )
+</insert>
+
+ <!-- insert sqlserver -->
+<insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.Document" databaseId="sqlserver"
+	useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+  insert into U_DOCUMENT (ID,<include refid="base_column"></include> )
+  values (#{id,jdbcType=INTEGER}, 
+    #{referType,jdbcType=VARCHAR}, 
+    #{referKey,jdbcType=VARCHAR}, 
+    #{fileName,jdbcType=VARCHAR}, 
+    #{fileType,jdbcType=VARCHAR}, 
+    #{filePath,jdbcType=VARCHAR}, 
+    #{fileSize,jdbcType=BIGINT},
+    #{localPath,jdbcType=VARCHAR}, 
+    #{fileUid,jdbcType=VARCHAR},  
+    #{permissionDown,jdbcType=VARCHAR}, 
+    #{permissionType,jdbcType=VARCHAR}, 
+    #{permissionUser,jdbcType=VARCHAR}, 
+    #{permissionDept,jdbcType=VARCHAR}, 
+    #{permissionRole,jdbcType=VARCHAR}, 
+    #{createdTime,jdbcType=TIMESTAMP}, 
+    #{createdUserId,jdbcType=INTEGER}, 
+    #{createdUserName,jdbcType=VARCHAR}, 
+    #{updatedTime,jdbcType=TIMESTAMP}, 
+    #{updatedUserId,jdbcType=INTEGER}, 
+    #{updatedUserName,jdbcType=VARCHAR}
+   )
+</insert>
+
+
+<!-- 分页查询 -->
+	<select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.common.Document">
+	    select id,
+	    <include refid="base_column"/>
+	    from U_DOCUMENT
+	    where 1=1
+	    <if test="object.referType != null and object.referType != ''">
+	        and refer_Type like '%${object.referType}%'
+	    </if>
+	    <if test="object.referKey != null and object.referKey != ''">
+	        and refer_Key like '%${object.referKey}%'
+	    </if>
+	    <if test="object.filePath != null and object.filePath != ''">
+	        and file_path like '%${object.file_path}%'
+	    </if>
+	    <if test="object.permissionDept != null and object.permissionDept != ''">
+	        and permission_Dept like '%${object.permissionDept}%'
+	    </if>
+	    <if test="object.permissionRole != null and object.permissionRole != ''">
+	        and permission_Role like '%${object.permissionRole}%'
+	    </if>
+	    <if test="object.permissionUser != null and object.permissionUser != ''">
+	        and permission_User like '%${object.permissionUser}%'
+	    </if>
+	    
+	</select>
+
+
+	<!-- update -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.common.Document">
+        update U_DOCUMENT set 
+			refer_Type = #{referType,jdbcType=VARCHAR}, 
+		    refer_Key = #{referKey,jdbcType=VARCHAR}, 
+		    fileName = #{fileName,jdbcType=VARCHAR}, 
+		    file_Type = #{fileType,jdbcType=VARCHAR}, 
+		    file_Path = #{filePath,jdbcType=VARCHAR}, 
+		    file_Size =#{fileSize,jdbcType=BIGINT},
+		    local_path = #{localPath,jdbcType=VARCHAR}, 
+		    file_uid =#{fileUid,jdbcType=VARCHAR},  
+		    permission_Down = #{permissionDown,jdbcType=VARCHAR}, 
+		    permission_Type = #{permissionType,jdbcType=VARCHAR}, 
+		    permission_User = #{permissionUser,jdbcType=VARCHAR}, 
+		    permission_Dept = #{permissionDept,jdbcType=VARCHAR}, 
+		    permission_Role = #{permissionRole,jdbcType=VARCHAR}, 
+			updated_time=  #{updatedTime,jdbcType=TIMESTAMP},
+			updated_user_id=  #{updatedUserId,jdbcType=INTEGER},
+			updated_user_name=  #{updatedUserName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.io.Serializable">
+        delete from U_DOCUMENT where id = #{value}
+    </delete>
+    
+</mapper>
+
+
+
+
+
+

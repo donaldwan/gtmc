@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.common.AttachmentMapper">
+    <sql id="base_column">
+        file_name,file_path,file_type,file_size,
+        created_time,created_user_id,created_user_name
+    </sql>
+    <!-- insert oracle -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.Attachment" databaseId="oracle">
+        insert into com_attachment(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{fileName,jdbcType=VARCHAR},
+        #{filePath,jdbcType=VARCHAR},
+        #{fileType,jdbcType=VARCHAR},
+        #{fileSize,jdbcType=BIGINT},
+
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- insert mysql -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.Attachment" databaseId="mysql"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into com_attachment(<include refid="base_column"/>)values(
+        #{fileName,jdbcType=VARCHAR},
+        #{filePath,jdbcType=VARCHAR},
+        #{fileType,jdbcType=VARCHAR},
+        #{fileSize,jdbcType=BIGINT},
+
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+    <!-- insert sqlserver -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.Attachment" databaseId="sqlserver"
+    	useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into com_attachment(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{fileName,jdbcType=VARCHAR},
+        #{filePath,jdbcType=VARCHAR},
+        #{fileType,jdbcType=VARCHAR},
+        #{fileSize,jdbcType=BIGINT},
+
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+     <!-- insert postgres -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.common.Attachment" databaseId="postgres">
+        insert into com_attachment(id,<include refid="base_column"/>)values(
+        #{id,jdbcType=INTEGER},
+        #{fileName,jdbcType=VARCHAR},
+        #{filePath,jdbcType=VARCHAR},
+        #{fileType,jdbcType=VARCHAR},
+        #{fileSize,jdbcType=BIGINT},
+
+        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdUserId,jdbcType=INTEGER},
+        #{createdUserName,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- 根据文件ID查询 -->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.common.Attachment">
+        select id,file_name,file_path,file_type,file_size,created_time
+        from com_attachment where id = #{id}
+    </select>
+
+    <select id="findByIds" resultType="cn.com.gtmc.glaf2.entity.common.Attachment">
+        select id,
+        <include refid="base_column"/>
+        from com_attachment where id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

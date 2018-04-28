@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.gtmc.glaf2.mapper.security.RoleMapper">
+    <sql id="base_column">
+        role_name,role_code,status,
+        remark,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name
+ 	</sql> 
+ 	
+    <!-- 分页查询  oracle-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Role" databaseId="oracle">
+        select id,<include refid="base_column" /> from u_role
+        where 1=1
+        <if test="object.roleName != null and object.roleName != ''">
+            and role_name like CONCAT('%',CONCAT(#{object.roleName},'%')) ESCAPE '\'
+        </if>
+    </select>
+    
+    <!-- 分页查询 mysql-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Role" databaseId="mysql">
+        select id,<include refid="base_column" /> from u_role
+        where 1=1
+        <if test="object.roleName != null and object.roleName != ''">
+            and role_name like CONCAT('%',CONCAT(#{object.roleName},'%'))
+        </if>
+    </select>
+    
+    <!-- 分页查询  sqlserver-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Role" databaseId="sqlserver">
+        select id,<include refid="base_column" /> from u_role
+        where 1=1
+        <if test="object.roleName != null and object.roleName != ''">
+            and role_name like ('%' + #{object.roleName} + '%') ESCAPE '\'
+        </if>
+    </select>
+    
+     <!-- 分页查询  postgres-->
+    <select id="findPage" parameterType="Page" resultType="cn.com.gtmc.glaf2.entity.security.Role" databaseId="postgres">
+        select id,<include refid="base_column" /> from u_role
+        where 1=1
+        <if test="object.roleName != null and object.roleName != ''">
+            and role_name like CONCAT('%',CONCAT(#{object.roleName},'%')) ESCAPE '\'
+        </if>
+    </select>
+    
+    <!-- findById -->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Role">
+        select id,<include refid="base_column" /> from u_role where id = #{id}
+    </select>
+    
+     <!-- findById postgres -->
+    <select id="findById" parameterType="java.io.Serializable" resultType="cn.com.gtmc.glaf2.entity.security.Role" databaseId="postgres">
+        select id,<include refid="base_column" /> from u_role where id = CAST(#{id} AS INTEGER)
+    </select>
+    
+	<!-- mysql insert -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Role" 
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+        
+        insert into u_role(<include refid="base_column"/>)values(
+			#{roleName,jdbcType=VARCHAR},
+			#{roleCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			
+			#{remark,jdbcType=VARCHAR},
+			#{createdTime,jdbcType=TIMESTAMP},
+			#{createdUserId,jdbcType=INTEGER},
+			#{createdUserName,jdbcType=VARCHAR},
+			#{updatedTime,jdbcType=TIMESTAMP},
+			#{updatedUserId,jdbcType=INTEGER},
+			#{updatedUserName,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- oracle insert -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Role" databaseId="oracle">
+        
+        insert into u_role(id,<include refid="base_column"/>)values(
+        	#{id,jdbcType=INTEGER},
+			#{roleName,jdbcType=VARCHAR},
+			#{roleCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			
+			#{remark,jdbcType=VARCHAR},
+			#{createdTime,jdbcType=TIMESTAMP},
+			#{createdUserId,jdbcType=INTEGER},
+			#{createdUserName,jdbcType=VARCHAR},
+			#{updatedTime,jdbcType=TIMESTAMP},
+			#{updatedUserId,jdbcType=INTEGER},
+			#{updatedUserName,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- sqlserver insert -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Role" 
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">
+        
+        insert into u_role(<include refid="base_column"/>)values(
+			#{roleName,jdbcType=VARCHAR},
+			#{roleCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			
+			#{remark,jdbcType=VARCHAR},
+			#{createdTime,jdbcType=TIMESTAMP},
+			#{createdUserId,jdbcType=INTEGER},
+			#{createdUserName,jdbcType=VARCHAR},
+			#{updatedTime,jdbcType=TIMESTAMP},
+			#{updatedUserId,jdbcType=INTEGER},
+			#{updatedUserName,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- postgres insert -->
+    <insert id="insert" parameterType="cn.com.gtmc.glaf2.entity.security.Role"  databaseId="postgres">
+        insert into u_role(id,<include refid="base_column"/>)values(
+        	#{id,jdbcType=INTEGER},
+			#{roleName,jdbcType=VARCHAR},
+			#{roleCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			
+			#{remark,jdbcType=VARCHAR},
+			#{createdTime,jdbcType=TIMESTAMP},
+			#{createdUserId,jdbcType=INTEGER},
+			#{createdUserName,jdbcType=VARCHAR},
+			#{updatedTime,jdbcType=TIMESTAMP},
+			#{updatedUserId,jdbcType=INTEGER},
+			#{updatedUserName,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <!-- update -->
+    <update id="update" parameterType="cn.com.gtmc.glaf2.entity.security.Role">
+        update u_role set 
+			role_name=  #{roleName,jdbcType=VARCHAR},
+			role_code = #{roleCode,jdbcType=VARCHAR},
+			remark=  #{remark,jdbcType=VARCHAR},
+			
+			updated_time=  #{updatedTime,jdbcType=TIMESTAMP},
+			updated_user_id=  #{updatedUserId,jdbcType=INTEGER},
+			updated_user_name=  #{updatedUserName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <!-- 删除角色和用户的对应的关系 -->
+    <delete id="deleteRoleUser" parameterType="java.io.Serializable">
+        delete from u_user_role where role_id = #{value}
+    </delete>
+    
+    <!-- 删除角色 -->
+    <delete id="delete" parameterType="java.io.Serializable">
+        delete from u_role where id = #{value}
+    </delete>
+    
+    <!-- 删除角色对应的菜单 -->
+    <delete id="deleteScreenByRole" parameterType="java.io.Serializable">
+        delete from u_role_screen where role_id = #{value}
+    </delete>
+    
+    <!-- 删除角色对应的按钮权限 -->
+    <delete id="deleteAuthByRole" parameterType="java.io.Serializable">
+        delete from u_role_authentication where role_id = #{value}
+    </delete>
+    
+    <!-- 新增角色对应的菜单  mysql-->
+    <insert id="insertRoleScreen" parameterType="cn.com.gtmc.glaf2.entity.security.RoleAuthentication"
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+        insert into u_role_screen(role_id,screen_id,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name)
+        	values(
+	        	#{roleId,jdbcType=INTEGER},
+	        	#{screenId,jdbcType=INTEGER},
+	        	
+				#{createdTime,jdbcType=TIMESTAMP},
+				#{createdUserId,jdbcType=INTEGER},
+				#{createdUserName,jdbcType=VARCHAR},
+				#{updatedTime,jdbcType=TIMESTAMP},
+				#{updatedUserId,jdbcType=INTEGER},
+				#{updatedUserName,jdbcType=VARCHAR}
+        	)
+    </insert>
+    
+    <!-- 新增角色对应的菜单  oracle-->
+    <insert id="insertRoleScreen" parameterType="cn.com.gtmc.glaf2.entity.security.RoleAuthentication" databaseId="oracle">
+        insert into u_role_screen(id,role_id,screen_id,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name)
+        	values(
+        		#{id,jdbcType=INTEGER},
+	        	#{roleId,jdbcType=INTEGER},
+	        	#{screenId,jdbcType=INTEGER},
+	        	
+				#{createdTime,jdbcType=TIMESTAMP},
+				#{createdUserId,jdbcType=INTEGER},
+				#{createdUserName,jdbcType=VARCHAR},
+				#{updatedTime,jdbcType=TIMESTAMP},
+				#{updatedUserId,jdbcType=INTEGER},
+				#{updatedUserName,jdbcType=VARCHAR}
+        	)
+    </insert>
+    
+    <!-- 新增角色对应的菜单  sqlserver-->
+    <insert id="insertRoleScreen" parameterType="cn.com.gtmc.glaf2.entity.security.RoleAuthentication"
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">
+        insert into u_role_screen(role_id,screen_id,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name)
+        	values(
+	        	#{roleId,jdbcType=INTEGER},
+	        	#{screenId,jdbcType=INTEGER},	        	
+				#{createdTime,jdbcType=TIMESTAMP},
+				#{createdUserId,jdbcType=INTEGER},
+				#{createdUserName,jdbcType=VARCHAR},
+				#{updatedTime,jdbcType=TIMESTAMP},
+				#{updatedUserId,jdbcType=INTEGER},
+				#{updatedUserName,jdbcType=VARCHAR}
+        	)
+    </insert>
+    
+      <!-- 新增角色对应的菜单  postgres-->
+    <insert id="insertRoleScreen" parameterType="cn.com.gtmc.glaf2.entity.security.RoleAuthentication" databaseId="postgres">
+        insert into u_role_screen(id,role_id,screen_id,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name)
+        	values(
+        		#{id,jdbcType=INTEGER},
+	        	#{roleId,jdbcType=INTEGER},
+	        	#{screenId,jdbcType=INTEGER},
+	        	
+				#{createdTime,jdbcType=TIMESTAMP},
+				#{createdUserId,jdbcType=INTEGER},
+				#{createdUserName,jdbcType=VARCHAR},
+				#{updatedTime,jdbcType=TIMESTAMP},
+				#{updatedUserId,jdbcType=INTEGER},
+				#{updatedUserName,jdbcType=VARCHAR}
+        	)
+    </insert>
+    
+    <!-- 新增角色对应的权限  mysql-->
+    <insert id="insertRoleAuth" parameterType="cn.com.gtmc.glaf2.entity.security.RoleAuthentication"
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="mysql">
+        insert into u_role_authentication(role_id,authentication_id,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name)
+        	values(
+        		#{roleId,jdbcType=INTEGER},
+	        	#{authenticationId,jdbcType=INTEGER},
+	        	
+				#{createdTime,jdbcType=TIMESTAMP},
+				#{createdUserId,jdbcType=INTEGER},
+				#{createdUserName,jdbcType=VARCHAR},
+				#{updatedTime,jdbcType=TIMESTAMP},
+				#{updatedUserId,jdbcType=INTEGER},
+				#{updatedUserName,jdbcType=VARCHAR}
+        	)
+    </insert>
+    
+    <!-- 新增角色对应的权限  oracle-->
+    <insert id="insertRoleAuth" parameterType="cn.com.gtmc.glaf2.entity.security.RoleAuthentication" databaseId="oracle">
+        insert into u_role_authentication(id,role_id,authentication_id,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name)
+        	values(
+        		#{id,jdbcType=INTEGER},
+        		#{roleId,jdbcType=INTEGER},
+	        	#{authenticationId,jdbcType=INTEGER},
+	        	
+				#{createdTime,jdbcType=TIMESTAMP},
+				#{createdUserId,jdbcType=INTEGER},
+				#{createdUserName,jdbcType=VARCHAR},
+				#{updatedTime,jdbcType=TIMESTAMP},
+				#{updatedUserId,jdbcType=INTEGER},
+				#{updatedUserName,jdbcType=VARCHAR}
+        	)
+    </insert>
+    
+    <!-- 新增角色对应的权限  sqlserver-->
+    <insert id="insertRoleAuth" parameterType="cn.com.gtmc.glaf2.entity.security.RoleAuthentication"
+        keyColumn="id" keyProperty="id" useGeneratedKeys="true" databaseId="sqlserver">
+        insert into u_role_authentication(role_id,authentication_id,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name)
+        	values(
+        		#{roleId,jdbcType=INTEGER},
+	        	#{authenticationId,jdbcType=INTEGER},	        	
+				#{createdTime,jdbcType=TIMESTAMP},
+				#{createdUserId,jdbcType=INTEGER},
+				#{createdUserName,jdbcType=VARCHAR},
+				#{updatedTime,jdbcType=TIMESTAMP},
+				#{updatedUserId,jdbcType=INTEGER},
+				#{updatedUserName,jdbcType=VARCHAR}
+        	)
+    </insert>
+    
+     <!-- 新增角色对应的权限  postgres-->
+    <insert id="insertRoleAuth" parameterType="cn.com.gtmc.glaf2.entity.security.RoleAuthentication" databaseId="postgres">
+        insert into u_role_authentication(id,role_id,authentication_id,created_time,created_user_id,created_user_name,updated_time,updated_user_id,updated_user_name)
+        	values(
+        		#{id,jdbcType=INTEGER},
+        		#{roleId,jdbcType=INTEGER},
+	        	#{authenticationId,jdbcType=INTEGER},
+	        	
+				#{createdTime,jdbcType=TIMESTAMP},
+				#{createdUserId,jdbcType=INTEGER},
+				#{createdUserName,jdbcType=VARCHAR},
+				#{updatedTime,jdbcType=TIMESTAMP},
+				#{updatedUserId,jdbcType=INTEGER},
+				#{updatedUserName,jdbcType=VARCHAR}
+        	)
+    </insert>
+</mapper>
